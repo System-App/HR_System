@@ -1,0 +1,2287 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="HR System">
+    <meta name="theme-color" content="#059669">
+    <title>HR System</title>
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" href="icons/favicon-48.png" sizes="48x48">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+    <script>(function(){try{var p=JSON.parse(localStorage.getItem('mofradPrefs'))||{};var t=p.theme==='dark'?'dark':'light';var f=['sm','md','lg','xl'].indexOf(p.fontSize)>=0?p.fontSize:'md';var d=document.documentElement;d.setAttribute('data-theme',t);d.setAttribute('data-fs',f);}catch(e){}})();</script>
+    
+            <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap');
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+
+        :root{
+            --p:#059669;--pd:#047857;--pl:#10B981;
+            --gold:#D97706;--gold-l:#F59E0B;
+            --danger:#DC2626;--success:#059669;--blue:#2563EB;
+            --bg:#FAFAF7;--bg2:#F3F0EA;--bg3:#EAE5D9;
+            --card:#FFFFFF;
+            --t:#1C1917;--t2:#44403C;--t3:#78716C;
+            --b:#E7E2D9;--b2:#D5CFC3;
+            --sh:0 1px 4px rgba(28,25,23,.08),0 4px 16px rgba(28,25,23,.06);
+            --sh2:0 2px 8px rgba(28,25,23,.1),0 8px 32px rgba(28,25,23,.1);
+            --sh3:0 0 0 3px rgba(5,150,105,.15);
+            /* ئاڵیاسەکان — گۆڕاوە داینامیکەکان کە پێشتر پێناسە نەکرابوون */
+            --primary:#059669;--secondary:#2563EB;--text-light:#78716C;--border:#E7E2D9;
+        }
+
+        body{
+            font-family:'Vazirmatn',-apple-system,sans-serif;
+            background:var(--bg);
+            color:var(--t);
+            min-height:100vh;
+            padding-bottom:90px;
+            direction:rtl;
+            -webkit-font-smoothing:antialiased;
+        }
+
+        /* ── HEADER ──────────────────────────────── */
+        .header{
+            background:var(--card);
+            border-bottom:2px solid var(--b);
+            padding:12px 18px 10px;
+            position:sticky;top:0;z-index:100;
+            box-shadow:var(--sh);
+        }
+        .header-row1{display:flex;justify-content:center;align-items:center;margin-bottom:9px}
+        .header-row1 h1{
+            font-size:21px;font-weight:900;
+            color:var(--t);letter-spacing:-.4px;
+        }
+        .header-row1 h1 .g{color:var(--p)}
+        .header-row2{display:flex;justify-content:space-between;align-items:center}
+        .user-badge{
+            background:linear-gradient(135deg,#ECFDF5,#D1FAE5);
+            border:1.5px solid #6EE7B7;
+            color:var(--pd);
+            padding:5px 14px;border-radius:20px;
+            font-size:13px;font-weight:800;
+            max-width:165px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+        }
+        .logout-btn{
+            background:var(--bg2);border:1.5px solid var(--b2);
+            color:var(--t3);border-radius:16px;
+            padding:5px 12px;font-size:12px;font-weight:700;
+            cursor:pointer;font-family:inherit;transition:all .2s;
+        }
+        .logout-btn:active{background:var(--bg3);color:var(--t2)}
+
+        /* ── CONTAINER ───────────────────────────── */
+        .container{max-width:600px;margin:0 auto;padding:14px}
+
+        /* ── CARD ────────────────────────────────── */
+        .card{
+            background:var(--card);
+            border:1.5px solid var(--b);
+            border-radius:20px;
+            padding:18px;margin-bottom:12px;
+            box-shadow:var(--sh);
+            transition:box-shadow .2s;
+        }
+        .card-header{
+            display:flex;justify-content:space-between;align-items:center;
+            margin-bottom:14px;padding-bottom:12px;
+            border-bottom:1.5px solid var(--b);
+        }
+        .card-title{font-size:16px;font-weight:800;color:var(--t);display:flex;align-items:center;gap:8px}
+        .card-title .icon{font-size:18px}
+
+        /* ── STAT CARDS ──────────────────────────── */
+        .stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
+        .stat-card{
+            background:linear-gradient(145deg,#ECFDF5,#F0FDF4);
+            border:1.5px solid #A7F3D0;
+            padding:16px 12px;border-radius:18px;text-align:center;
+            position:relative;overflow:hidden;
+            box-shadow:0 2px 8px rgba(5,150,105,.1);
+        }
+        .stat-card::after{
+            content:'';position:absolute;
+            bottom:-20px;left:-20px;
+            width:80px;height:80px;
+            background:rgba(5,150,105,.07);
+            border-radius:50%;
+        }
+        .stat-card.blue{
+            background:linear-gradient(145deg,#EFF6FF,#EFF6FF);
+            border-color:#BFDBFE;
+            box-shadow:0 2px 8px rgba(37,99,235,.1);
+        }
+        .stat-card.blue::after{background:rgba(37,99,235,.07)}
+        .stat-card.orange{
+            background:linear-gradient(145deg,#FFFBEB,#FEF3C7);
+            border-color:#FDE68A;
+            box-shadow:0 2px 8px rgba(217,119,6,.12);
+        }
+        .stat-card.orange::after{background:rgba(217,119,6,.07)}
+        .stat-card.purple{
+            background:linear-gradient(145deg,#F5F3FF,#EDE9FE);
+            border-color:#DDD6FE;
+            box-shadow:0 2px 8px rgba(124,58,237,.1);
+        }
+        .stat-card.purple::after{background:rgba(124,58,237,.07)}
+
+        .stat-value{
+            font-size:20px;font-weight:900;
+            margin-bottom:4px;word-break:break-all;
+            line-height:1.2;display:block;color:var(--t);
+            position:relative;z-index:1;
+        }
+        .stat-value.len-8{font-size:17px}.stat-value.len-10{font-size:14px}
+        .stat-value.len-13{font-size:12px}.stat-value.len-16{font-size:10px}
+        .stat-label{font-size:11px;color:var(--t3);font-weight:700;display:block;margin-top:2px;position:relative;z-index:1}
+
+        /* ── FORM ────────────────────────────────── */
+        .form-group{margin-bottom:13px}
+        .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+        label{display:block;font-weight:700;margin-bottom:6px;color:var(--t2);font-size:13px}
+        input[type=text],input[type=number],input[type=date],select,textarea{
+            width:100%;padding:11px 13px;
+            background:var(--bg);border:1.5px solid var(--b);
+            border-radius:12px;font-size:15px;color:var(--t);
+            font-family:inherit;transition:all .2s;
+            direction:rtl;-webkit-appearance:none;
+        }
+        input:focus,select:focus,textarea:focus{
+            outline:none;border-color:var(--pl);
+            background:#fff;box-shadow:var(--sh3);
+        }
+        input::placeholder,textarea::placeholder{color:var(--t3);font-size:13px}
+        select option{background:#fff;color:var(--t)}
+        textarea{min-height:80px;resize:none}
+        input[readonly]{color:var(--t3);background:var(--bg2)!important}
+
+        /* ── BUTTONS ─────────────────────────────── */
+        .btn{
+            padding:10px 16px;border:none;border-radius:10px;
+            font-size:14px;font-weight:700;cursor:pointer;
+            font-family:inherit;transition:all .2s;
+        }
+        .btn:active{transform:scale(.96)}
+        .btn-primary{
+            background:linear-gradient(135deg,var(--pl),var(--p));
+            color:#fff;
+            box-shadow:0 3px 12px rgba(5,150,105,.28);
+        }
+        .btn-primary:active{box-shadow:0 1px 6px rgba(5,150,105,.18)}
+        .btn-secondary{background:var(--bg2);color:var(--t2);border:1.5px solid var(--b)}
+        .btn-danger{background:#FEF2F2;color:var(--danger);border:1.5px solid #FECACA}
+        .btn-block{width:100%;display:block;padding:14px;font-size:16px;border-radius:14px}
+        .btn-small{padding:7px 12px;font-size:12px;border-radius:8px}
+
+        /* ── NAV ─────────────────────────────────── */
+        .bottom-nav{
+            position:fixed;bottom:0;left:0;right:0;
+            background:rgba(255,255,255,.97);
+            border-top:2px solid var(--b);
+            display:grid;grid-template-columns:repeat(6,1fr);
+            padding:8px 0 max(10px,env(safe-area-inset-bottom));
+            backdrop-filter:blur(16px);
+            -webkit-backdrop-filter:blur(16px);
+            z-index:100;box-shadow:0 -2px 16px rgba(28,25,23,.08);
+        }
+        .nav-item{
+            display:flex;flex-direction:column;align-items:center;
+            justify-content:center;gap:2px;padding:4px 2px;
+            border:none;background:transparent;color:var(--t3);
+            cursor:pointer;font-family:inherit;transition:all .2s;position:relative;
+        }
+        .nav-item.active{color:var(--p)}
+        .nav-item.active .nav-icon{
+            background:linear-gradient(135deg,#ECFDF5,#D1FAE5);
+            border-radius:10px;padding:2px 6px;
+        }
+        .nav-icon{font-size:20px;transition:all .2s}
+        .nav-label{font-size:9px;font-weight:800;letter-spacing:.2px}
+
+        /* ── ITEMS ───────────────────────────────── */
+        .item{
+            background:var(--card);border:1.5px solid var(--b);
+            border-radius:16px;padding:14px;margin-bottom:9px;
+            box-shadow:var(--sh);transition:all .2s;
+        }
+        .item-header{display:flex;justify-content:space-between;align-items:flex-start}
+        .item-title{font-size:15px;font-weight:800;color:var(--t);margin-bottom:3px}
+        .item-meta{font-size:12px;color:var(--t3);font-weight:500}
+        .item-price{font-size:16px;font-weight:900;color:var(--p);text-align:left}
+        .item-actions{display:flex;gap:8px;margin-top:10px}
+
+        /* ── FILTER ──────────────────────────────── */
+        .filter-group{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+        .filter-btn{
+            padding:7px 14px;border:1.5px solid var(--b);
+            border-radius:20px;background:var(--bg);
+            color:var(--t3);font-size:13px;font-weight:700;
+            cursor:pointer;font-family:inherit;transition:all .2s;
+        }
+        .filter-btn.active{
+            background:linear-gradient(135deg,#ECFDF5,#D1FAE5);
+            border-color:#6EE7B7;color:var(--pd);
+        }
+
+        /* ── EMPTY ───────────────────────────────── */
+        .empty-state{text-align:center;padding:40px 20px;color:var(--t3)}
+        .empty-icon{font-size:48px;margin-bottom:12px;opacity:.4;display:block}
+
+        /* ── TOAST ───────────────────────────────── */
+        .toast{
+            position:fixed;top:20px;left:50%;
+            transform:translateX(-50%) translateY(-80px);
+            background:var(--t);color:#fff;
+            padding:12px 22px;border-radius:14px;
+            font-size:14px;font-weight:700;font-family:inherit;
+            z-index:1000;
+            transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+            white-space:nowrap;box-shadow:var(--sh2);
+        }
+        .toast.show{transform:translateX(-50%) translateY(0)}
+        .toast.success{background:var(--p)}
+        .toast.error{background:var(--danger)}
+
+        /* ── REPORT ──────────────────────────────── */
+        .report-card{background:var(--card);border:1.5px solid var(--b);border-radius:20px;padding:18px;margin-top:8px;box-shadow:var(--sh)}
+        .report-header{border-bottom:1.5px solid var(--b);padding-bottom:14px;margin-bottom:14px}
+        .report-title{font-size:18px;font-weight:900;color:var(--t)}
+        .report-subtitle{font-size:13px;color:var(--t3);margin-top:3px}
+        .report-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--b)}
+        .report-label{font-size:14px;color:var(--t2);font-weight:500}
+        .report-value{font-size:15px;font-weight:800;color:var(--t)}
+        .positive{color:var(--p)!important}
+        .negative{color:var(--danger)!important}
+
+        /* ── TODAY ───────────────────────────────── */
+        .today-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:4px}
+        .today-item{
+            background:var(--bg2);border:1.5px solid var(--b);
+            border-radius:14px;padding:12px 8px;text-align:center;
+        }
+        .today-label{font-size:11px;color:var(--t3);margin-bottom:4px;font-weight:700}
+        .today-value{font-size:16px;font-weight:900}
+
+        /* ── ACTIVITY ────────────────────────────── */
+        .activity-item{
+            display:flex;align-items:center;gap:12px;
+            padding:11px;background:var(--card);
+            border:1.5px solid var(--b);border-radius:14px;
+            margin-bottom:7px;box-shadow:var(--sh);
+        }
+
+        /* ── IMAGE UPLOAD ────────────────────────── */
+        .img-upload-area{border:2px dashed var(--b2);border-radius:14px;padding:20px;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg2);position:relative;overflow:hidden;min-height:90px}
+        .img-upload-area.has-image{padding:0;border-style:solid;border-color:var(--pl)}
+        .img-upload-icon{font-size:30px;margin-bottom:6px}
+        .img-upload-text{font-size:14px;color:var(--t3);font-weight:600}
+        .img-upload-hint{font-size:11px;color:var(--t3);margin-top:4px;opacity:.6}
+        .img-preview{width:100%;max-height:200px;object-fit:contain;border-radius:12px;display:block}
+        .img-remove-btn{position:absolute;top:8px;left:8px;background:var(--danger);color:#fff;border:none;border-radius:50%;width:30px;height:30px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10}
+        .hidden-file-input{position:absolute;width:100%;height:100%;top:0;left:0;opacity:0;cursor:pointer;z-index:5;font-size:0}
+        .purchase-item-img{width:100%;max-height:160px;object-fit:contain;border-radius:10px;margin-bottom:10px;background:var(--bg2);display:block}
+
+        /* ── PAGE ────────────────────────────────── */
+        .page{display:none;animation:pageIn .22s ease both}
+        .page.active{display:block}
+        @keyframes pageIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+
+        /* ── COMPANY ─────────────────────────────── */
+        .company-item{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:var(--card);border:1.5px solid var(--b);border-radius:14px;margin-bottom:8px;box-shadow:var(--sh)}
+        .company-name{font-weight:800;color:var(--t);font-size:15px}
+
+        /* ── SPINNER ─────────────────────────────── */
+        .spinner{border:3px solid var(--b);border-top:3px solid var(--p);border-radius:50%;width:30px;height:30px;animation:spin 1s linear infinite;margin:20px auto}
+        @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+
+        /* ── PRINT ───────────────────────────────── */
+        @media print{
+            .bottom-nav,.header,.btn,.item-actions{display:none!important}
+            body{background:#fff;color:#000;padding:0}
+            .report-card{border:1.5px solid #ccc;box-shadow:none}
+            .positive{color:#059669!important}.negative{color:#dc2626!important}
+            #reportsPage{display:block!important}
+            .page:not(#reportsPage){display:none!important}
+        }
+        @media(max-width:768px){.form-row{grid-template-columns:1fr}}
+        @supports(padding:max(0px)){body{padding-bottom:max(90px,env(safe-area-inset-bottom))}}
+        /* چاپکردن لە دۆخی تاریکدا: ڕەنگ ڕووناک بکەرەوە بۆ کاغەز */
+        @media print{
+            html[data-theme="dark"]{--bg:#fff;--bg2:#f7f7f7;--bg3:#eee;--card:#fff;--t:#111;--t2:#333;--t3:#555;--b:#ccc;--b2:#bbb}
+        }
+        .dashboard-stats,.stat-mini{display:none!important}
+
+        /* ═══════════ ڕێکخستن: دوگمە و لەیبڵ ═══════════ */
+        .opt-row{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+        .opt-btn{
+            padding:12px;border:1.5px solid var(--b);border-radius:12px;
+            background:var(--bg2);color:var(--t2);font-size:14px;font-weight:700;
+            font-family:inherit;cursor:pointer;transition:all .18s;
+        }
+        .opt-btn:active{transform:scale(.97)}
+        .opt-btn.active{
+            background:linear-gradient(135deg,var(--pl),var(--p));color:#fff;
+            border-color:transparent;box-shadow:0 3px 12px rgba(5,150,105,.28);
+        }
+        .section-label{font-size:13px;font-weight:800;color:var(--t3);margin:18px 4px 10px}
+        .help-card{background:linear-gradient(135deg,#EFF6FF,#DBEAFE);border:1px solid #BFDBFE!important;color:#1E40AF}
+        .help-card .card-title,.help-card div{color:#1E40AF}
+
+        /* ═══════════ قەبارەی نووسین (zoom لەسەر ناوەڕۆک، لایەئۆت ناشکێت) ═══════════ */
+        html[data-fs="sm"] .container{zoom:.9}
+        html[data-fs="lg"] .container{zoom:1.12}
+        html[data-fs="xl"] .container{zoom:1.25}
+
+        /* ═══════════ دۆخی تاریک ═══════════ */
+        html[data-theme="dark"]{
+            --bg:#0E1512;--bg2:#161D19;--bg3:#1E2620;
+            --card:#171F1B;
+            --t:#F3F5F3;--t2:#C9CFCB;--t3:#9AA39D;
+            --b:#2A322D;--b2:#39433C;
+            --pl:#34D399;--gold-l:#FBBF24;--danger:#F87171;--blue:#60A5FA;
+            --sh:0 1px 4px rgba(0,0,0,.45),0 4px 16px rgba(0,0,0,.4);
+            --sh2:0 2px 8px rgba(0,0,0,.5),0 8px 32px rgba(0,0,0,.45);
+            --text-light:#9AA39D;--border:#2A322D;--secondary:#60A5FA;
+            color-scheme:dark;
+        }
+        html[data-theme="dark"] .stat-card{background:linear-gradient(145deg,#14251E,#0F1C17);border-color:#264A3B}
+        html[data-theme="dark"] .stat-card.blue{background:linear-gradient(145deg,#122338,#0E1B2E);border-color:#1E3A5F}
+        html[data-theme="dark"] .stat-card.orange{background:linear-gradient(145deg,#2A2210,#231B0C);border-color:#4A3A18}
+        html[data-theme="dark"] .stat-card.purple{background:linear-gradient(145deg,#221B34,#1A1528);border-color:#3A2F5C}
+        html[data-theme="dark"] .user-badge{background:linear-gradient(135deg,#14251E,#102019);border-color:#264A3B;color:#6EE7B7}
+        html[data-theme="dark"] .nav-item.active .nav-icon{background:linear-gradient(135deg,#14251E,#102019)}
+        html[data-theme="dark"] .filter-btn.active{background:linear-gradient(135deg,#14251E,#102019);border-color:#264A3B;color:#6EE7B7}
+        html[data-theme="dark"] input:focus,html[data-theme="dark"] select:focus,html[data-theme="dark"] textarea:focus{background:var(--bg2)}
+        html[data-theme="dark"] select option{background:var(--card);color:var(--t)}
+        html[data-theme="dark"] .btn-danger{background:rgba(248,113,113,.14);border-color:rgba(248,113,113,.4)}
+        html[data-theme="dark"] .bottom-nav{background:rgba(18,24,21,.97)}
+        html[data-theme="dark"] .help-card{background:linear-gradient(135deg,#122338,#0E1B2E);border-color:#1E3A5F!important}
+        html[data-theme="dark"] .help-card .card-title,html[data-theme="dark"] .help-card div{color:#93C5FD}
+        html[data-theme="dark"] .help-card strong{color:#DBEAFE}
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <!-- ڕیفی یەکەم: تایتڵ -->
+        <div class="header-row1">
+            <h1>🏢 HR System</h1>
+        </div>
+        <!-- ڕیفی دووەم: ناوی بەکارهێنەر + دوگمەی دەرچوون -->
+        <div class="header-row2">
+            <div class="user-badge" id="userBadge">...</div>
+            <button class="logout-btn" onclick="doLogout()">🚪 چوونەدەرەوە</button>
+        </div>
+    </div>
+
+    <div class="container">
+        
+        <!-- ===================== HOME PAGE ===================== -->
+        <div class="page active" id="homePage">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="homeTotalSales">0</div>
+                    <div class="stat-label">💰 کۆی فرۆشتن</div>
+                </div>
+                <div class="stat-card blue">
+                    <div class="stat-value" id="homeTotalPurchase">0</div>
+                    <div class="stat-label">📦 کۆی کڕین</div>
+                </div>
+                <div class="stat-card orange">
+                    <div class="stat-value" id="homeTotalExpense">0</div>
+                    <div class="stat-label">💸 کۆی خەرجی</div>
+                </div>
+                <div class="stat-card purple" id="homeProfitCard">
+                    <div class="stat-value" id="homeProfit">0</div>
+                    <div class="stat-label">📊 قازانج/زەرەر</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">
+                    <span class="icon">📅</span>
+                    فرۆشتنی ئەمڕۆ
+                </div>
+                <div id="todaySalesSummary"></div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">
+                    <span class="icon">📋</span>
+                    چالاکیە تازەکان
+                </div>
+                <div id="recentActivities"></div>
+            </div>
+        </div>
+
+        <!-- ===================== SALES PAGE ===================== -->
+        <div class="page" id="salesPage">
+            <!-- Add Sale Form -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="icon">➕</span>
+                        زیادکردنی فرۆشتن
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>جۆری فرۆشتن</label>
+                    <select id="saleType">
+                        <option value="عەسر">عەسر</option>
+                        <option value="شەو">شەو</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>بڕی پارە (IQD)</label>
+                    <input type="text" id="saleAmount" class="currency" placeholder="0" inputmode="numeric">
+                </div>
+                
+                <div class="form-group">
+                    <label>تێبینی</label>
+                    <textarea id="saleNote" placeholder="تێبینی (ئیختیاری)"></textarea>
+                </div>
+                
+                <button class="btn btn-primary btn-block" onclick="addSale()">
+                    زیادکردن
+                </button>
+            </div>
+            
+            <!-- Sales Summary -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="icon">📊</span>
+                        کۆی فرۆشتن
+                    </div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalDaySales">0</div>
+                        <div class="stat-label">فرۆشتنی عەسر</div>
+                    </div>
+                    <div class="stat-card blue">
+                        <div class="stat-value" id="totalNightSales">0</div>
+                        <div class="stat-label">فرۆشتنی شەو</div>
+                    </div>
+                </div>
+                <div style="text-align: center; padding: 16px; background: var(--bg); border-radius: 10px; margin-top: 12px;">
+                    <div style="font-size: 14px; color: var(--text-light); margin-bottom: 4px;">کۆی گشتی</div>
+                    <div style="font-size: 28px; font-weight: 700; color: var(--primary);" id="totalAllSales">0</div>
+                </div>
+            </div>
+            
+            <!-- Sales List -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="icon">📋</span>
+                        لیستی فرۆشتنەکان
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <button class="filter-btn active" onclick="filterSales('all')">هەموو</button>
+                    <button class="filter-btn" onclick="filterSales('عەسر')">عەسر</button>
+                    <button class="filter-btn" onclick="filterSales('شەو')">شەو</button>
+                </div>
+                <div class="items-list" id="salesList"></div>
+            </div>
+        </div>
+
+        <!-- ===================== EXPENSES PAGE ===================== -->
+        <div class="page" id="expensesPage">
+            <!-- Add Expense Form -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="icon">➕</span>
+                        زیادکردنی خەرجی
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>ناوی بابەت</label>
+                    <input type="text" id="expenseItem" placeholder="ناوی بابەت...">
+                </div>
+                
+                <div class="form-group">
+                    <label>بڕی پارە (IQD)</label>
+                    <input type="text" id="expenseAmount" class="currency" placeholder="0" inputmode="numeric">
+                </div>
+                
+                <div class="form-group">
+                    <label>تێبینی</label>
+                    <textarea id="expenseNote" placeholder="تێبینی (ئیختیاری)"></textarea>
+                </div>
+                
+                <button class="btn btn-warning btn-block" onclick="addExpense()">
+                    زیادکردن
+                </button>
+            </div>
+            
+            <!-- Expenses Summary -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="icon">📊</span>
+                        کۆی خەرجییەکان
+                    </div>
+                </div>
+                <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); border-radius: 12px; color: white;">
+                    <div style="font-size: 14px; opacity: 0.9; margin-bottom: 4px;">کۆی گشتی</div>
+                    <div style="font-size: 32px; font-weight: 700;" id="totalExpenses">0</div>
+                </div>
+            </div>
+            
+            <!-- Expenses List -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="icon">📋</span>
+                        لیستی خەرجییەکان
+                    </div>
+                </div>
+                <div class="items-list" id="expensesList"></div>
+            </div>
+        </div>
+
+        <!-- ===================== PURCHASE PAGE ===================== -->
+        <div class="page" id="purchasePage">
+            <!-- Manage Companies -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="icon">🏢</span>
+                        بەڕێوەبردنی کۆمپانیاکان
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <input type="text" id="newCompanyName" placeholder="ناوی کۆمپانیای نوێ...">
+                </div>
+                <button class="btn btn-secondary btn-block" onclick="addCompany()">
+                    زیادکردنی کۆمپانیا
+                </button>
+                
+                <div style="margin-top: 16px;">
+                    <div style="font-weight: 600; margin-bottom: 8px; font-size: 14px;">لیستی کۆمپانیاکان:</div>
+                    <div id="companiesList"></div>
+                </div>
+            </div>
+            
+            <!-- Add Purchase Form -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="icon">➕</span>
+                        زیادکردنی کڕین
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>کۆمپانیا</label>
+                    <select id="purchaseCompany">
+                        <option value="">کۆمپانیایەک هەڵبژێرە...</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>ناوی بابەت</label>
+                    <input type="text" id="purchaseItem" placeholder="ناوی بابەت...">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>نرخی کڕین (یەک دانە)</label>
+                        <input type="text" id="purchasePrice" class="currency" placeholder="0" inputmode="numeric" oninput="calculatePurchaseProfit()">
+                    </div>
+                    <div class="form-group">
+                        <label>عەدەد</label>
+                        <input type="text" id="purchaseQuantity" class="currency" placeholder="0" inputmode="numeric" oninput="calculatePurchaseProfit()">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>کۆی کڕین</label>
+                    <input type="text" id="purchaseTotalCost" class="currency" placeholder="0" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label>نرخی فرۆشتن (یەک دانە)</label>
+                    <input type="text" id="purchaseSellPrice" class="currency" placeholder="0" inputmode="numeric" oninput="calculatePurchaseProfit()">
+                </div>
+                
+                <div class="form-group">
+                    <label>کۆی فرۆشتن</label>
+                    <input type="text" id="purchaseTotalSell" class="currency" placeholder="0" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label>قازانج</label>
+                    <input type="text" id="purchaseProfit" class="currency" placeholder="0" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label>تێبینی</label>
+                    <textarea id="purchaseNote" placeholder="تێبینی (ئیختیاری)"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>وێنەی بابەت <span style="font-weight:400; color:var(--text-light); font-size:12px;">(ئیختیاری)</span></label>
+                    <div class="img-upload-area" id="purchaseImgArea" onclick="triggerImgUpload()">
+                        <input type="file" accept="image/*" class="hidden-file-input" id="purchaseImgInput" onchange="handleImgUpload(event)">
+                        <div id="purchaseImgPlaceholder">
+                            <div class="img-upload-icon">📷</div>
+                            <div class="img-upload-text">بەستنی وێنە</div>
+                            <div class="img-upload-hint">PNG، JPG، HEIC پشتگیری دەکرێت</div>
+                        </div>
+                        <img id="purchaseImgPreview" class="img-preview" style="display:none;" alt="وێنەی بابەت">
+                        <button type="button" class="img-remove-btn" id="purchaseImgRemove" style="display:none;" onclick="removeImg(event)">✕</button>
+                    </div>
+                </div>
+                
+                <button class="btn btn-primary btn-block" onclick="addPurchase()">
+                    زیادکردن
+                </button>
+            </div>
+            
+            <!-- Purchase Summary -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="icon">📊</span>
+                        کۆی کڕینەکان
+                    </div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card blue">
+                        <div class="stat-value" id="totalPurchaseCost">0</div>
+                        <div class="stat-label">کۆی کڕین</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalPurchaseSell">0</div>
+                        <div class="stat-label">کۆی فرۆشتن</div>
+                    </div>
+                </div>
+                <div style="text-align: center; padding: 16px; background: var(--bg); border-radius: 10px; margin-top: 12px;">
+                    <div style="font-size: 14px; color: var(--text-light); margin-bottom: 4px;">قازانجی کڕین</div>
+                    <div style="font-size: 28px; font-weight: 700; color: var(--success);" id="totalPurchaseProfit">0</div>
+                </div>
+            </div>
+            
+            <!-- Purchases List -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="icon">📋</span>
+                        لیستی کڕینەکان
+                    </div>
+                </div>
+                <div class="items-list" id="purchasesList"></div>
+            </div>
+        </div>
+
+        <!-- ===================== REPORTS PAGE ===================== -->
+        <div class="page" id="reportsPage">
+            <!-- Report Type Selection -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="icon">📊</span>
+                        جۆری ڕاپۆرت
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <button class="filter-btn active" onclick="setReportType('general')">حیساباتی گشتی</button>
+                    <button class="filter-btn" onclick="setReportType('company')">حیسابات بە کۆمپانیا</button>
+                </div>
+            </div>
+            
+            <!-- Date Range Selection -->
+            <div class="card" id="dateRangeCard">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="icon">📅</span>
+                        هەڵبژاردنی مەودا
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <button class="filter-btn active" onclick="setDateRange('week')">هەفتانە</button>
+                    <button class="filter-btn" onclick="setDateRange('month')">مانگانە</button>
+                    <button class="filter-btn" onclick="setDateRange('custom')">بەروارێکی دیاریکراو</button>
+                </div>
+                
+                <div id="customDateRange" style="display: none; margin-top: 16px;">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>لە بەرواری</label>
+                            <input type="date" id="reportStartDate">
+                        </div>
+                        <div class="form-group">
+                            <label>تا بەرواری</label>
+                            <input type="date" id="reportEndDate">
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn btn-primary btn-block" onclick="generateReport()" style="margin-top: 16px;">
+                    دروستکردنی ڕاپۆرت
+                </button>
+            </div>
+            
+            <!-- Company Selection (for company report) -->
+            <div class="card" id="companySelectCard" style="display: none;">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="icon">🏢</span>
+                        هەڵبژاردنی کۆمپانیا
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <select id="reportCompany">
+                        <option value="">کۆمپانیایەک هەڵبژێرە...</option>
+                    </select>
+                </div>
+                
+                <button class="btn btn-primary btn-block" onclick="generateCompanyReport()">
+                    دروستکردنی ڕاپۆرت
+                </button>
+            </div>
+            
+            <!-- Report Output -->
+            <div id="reportOutput"></div>
+        </div>
+
+        <!-- ===================== BACKUP PAGE ===================== -->
+        <div class="page" id="backupPage">
+
+            <!-- ڕێکخستن: ناوی پیشاندان -->
+            <div class="card">
+                <div class="card-header"><div class="card-title"><span class="icon">👤</span> ناوی پیشاندان</div></div>
+                <div class="form-group">
+                    <label>ناوی نوێ</label>
+                    <input type="text" id="setDisplayName" placeholder="ناوی نوێت بنووسە..." autocomplete="off">
+                </div>
+                <button class="btn btn-primary btn-block" onclick="changeDisplayName()">💾 پاشەکەوتکردنی ناو</button>
+            </div>
+
+            <!-- ڕێکخستن: گۆڕینی وشەی نهێنی -->
+            <div class="card">
+                <div class="card-header"><div class="card-title"><span class="icon">🔒</span> گۆڕینی وشەی نهێنی</div></div>
+                <div class="form-group">
+                    <label>وشەی نهێنیی ئێستا</label>
+                    <input type="password" id="setCurrentPass" placeholder="وشەی نهێنیی ئێستا..." autocomplete="current-password">
+                </div>
+                <div class="form-group">
+                    <label>وشەی نهێنیی نوێ</label>
+                    <input type="password" id="setNewPass" placeholder="لانیکەم ٤ پیت..." autocomplete="new-password">
+                </div>
+                <div class="form-group">
+                    <label>دووبارەکردنەوەی وشەی نهێنیی نوێ</label>
+                    <input type="password" id="setConfirmPass" placeholder="دووبارە بینووسە..." autocomplete="new-password">
+                </div>
+                <button class="btn btn-primary btn-block" onclick="changePassword()">🔑 گۆڕینی وشەی نهێنی</button>
+            </div>
+
+            <!-- ڕێکخستن: قەبارەی نووسین -->
+            <div class="card">
+                <div class="card-header"><div class="card-title"><span class="icon">🔤</span> قەبارەی نووسین</div></div>
+                <div class="opt-row">
+                    <button class="opt-btn" data-fs="sm" onclick="setFontSize('sm')">بچووک</button>
+                    <button class="opt-btn" data-fs="md" onclick="setFontSize('md')">ستاندارد</button>
+                    <button class="opt-btn" data-fs="lg" onclick="setFontSize('lg')">گەورە</button>
+                    <button class="opt-btn" data-fs="xl" onclick="setFontSize('xl')">زۆر گەورە</button>
+                </div>
+            </div>
+
+            <!-- ڕێکخستن: ڕووکار -->
+            <div class="card">
+                <div class="card-header"><div class="card-title"><span class="icon">🎨</span> ڕووکار</div></div>
+                <div class="opt-row">
+                    <button class="opt-btn" data-theme-btn="light" onclick="setTheme('light')">☀️ ڕووناک</button>
+                    <button class="opt-btn" data-theme-btn="dark" onclick="setTheme('dark')">🌙 تاریک</button>
+                </div>
+            </div>
+
+            <div class="section-label">💾 داتا و باکئەپ</div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="icon">📤</span>
+                        هەڵگرتنی داتا (Export)
+                    </div>
+                </div>
+                <p style="font-size:14px; color:var(--text-light); margin-bottom:16px; line-height:1.6;">
+                    هەموو داتاکانت بکە بە فایلێک و لە مۆبایلی نوێ بیگەڕێنەوە.
+                </p>
+                <button class="btn btn-primary btn-block" onclick="exportData()">
+                    📥 داونلۆدی داتاکان
+                </button>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="icon">📥</span>
+                        گەڕاندنەوەی داتا (Import)
+                    </div>
+                </div>
+                <p style="font-size:14px; color:var(--text-light); margin-bottom:16px; line-height:1.6;">
+                    فایلی backupەکەت هەڵبژێرە بۆ ئەوەی داتاکانت گەڕێنیتەوە.
+                </p>
+                <div class="img-upload-area" id="importArea" onclick="document.getElementById('importInput').click()" style="min-height:70px;">
+                    <input type="file" accept=".json" class="hidden-file-input" id="importInput" onchange="importData(event)">
+                    <div class="img-upload-icon">📂</div>
+                    <div class="img-upload-text">فایلی JSON هەڵبژێرە</div>
+                </div>
+            </div>
+
+            <div class="card help-card">
+                <div class="card-title" style="margin-bottom:12px;">
+                    <span class="icon">💡</span>
+                    چۆن داتاکانم بگەڕێنمەوە بۆ مۆبایلی نوێ؟
+                </div>
+                <div style="font-size:13px; line-height:1.9;">
+                    <div>١. لە مۆبایلی کۆنەکەت کلیک بکە <strong>ڕێکخستن ← داونلۆدی داتاکان</strong></div>
+                    <div>٢. فایلەکە بنێرە بۆ مۆبایلی نوێ (WhatsApp، iCloud...)</div>
+                    <div>٣. لە مۆبایلی نوێ کلیک بکە <strong>ڕێکخستن ← گەڕاندنەوەی داتا</strong></div>
+                    <div>٤. فایلەکە هەڵبژێرە — تەواوە ✅</div>
+                    <div style="margin-top:10px; padding-top:10px; border-top:1px solid #BFDBFE; font-weight:700;">💡 پێش زیادکردنی ئەپەکە بۆ ڕوونمای سەرەکی (Add to Home Screen)، سەرەتا لێرەوە داتاکانت Export بکە — بۆ دڵنیایی تەواو.</div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <button class="nav-item active" onclick="showPage('home')">
+            <div class="nav-icon">🏠</div>
+            <div class="nav-label">سەرەکی</div>
+        </button>
+        <button class="nav-item" onclick="showPage('sales')">
+            <div class="nav-icon">💰</div>
+            <div class="nav-label">فرۆشتن</div>
+        </button>
+        <button class="nav-item" onclick="showPage('expenses')">
+            <div class="nav-icon">💸</div>
+            <div class="nav-label">خەرجی</div>
+        </button>
+        <button class="nav-item" onclick="showPage('purchase')">
+            <div class="nav-icon">📦</div>
+            <div class="nav-label">کڕین</div>
+        </button>
+        <button class="nav-item" onclick="showPage('reports')">
+            <div class="nav-icon">📊</div>
+            <div class="nav-label">ڕاپۆرت</div>
+        </button>
+        <button class="nav-item" onclick="showPage('backup')">
+            <div class="nav-icon">⚙️</div>
+            <div class="nav-label">ڕێکخستن</div>
+        </button>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Data Storage
+        let sales = [];
+        let expenses = [];
+        let purchases = [];
+        let companies = [];
+        let currentSalesFilter = 'all';
+        let currentReportType = 'general';
+        let currentDateRange = 'week';
+        let currentUser = null;
+
+        // ── HTML escaping بۆ پاراستن لە شکاندنی لایەئۆت / injection ──
+        function escapeHtml(v){
+            if (v === null || v === undefined) return '';
+            return String(v).replace(/[&<>"\']/g, function(c){
+                return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];
+            });
+        }
+
+        // ── ID بەهێز و بێ کۆلیژن (وەک ژمارە دەمێنێتەوە بۆ گونجان لەگەڵ داتای کۆن) ──
+        let __idCounter = 0;
+        function uid(){
+            var t = Date.now();
+            if (t <= __idCounter) t = __idCounter + 1;
+            __idCounter = t;
+            return t;
+        }
+        function refreshIdCounter(){
+            var ids = [].concat(sales, expenses, purchases, companies)
+                .map(function(x){ return (x && Number(x.id)) || 0; });
+            ids.push(__idCounter, 0);
+            __idCounter = Math.max.apply(null, ids);
+        }
+
+        // ══════════ ڕێکخستنی ئامێر: theme + قەبارەی نووسین (کلیلی جیا، داتای بازرگانی دەست‌لێنەدراو) ══════════
+        var PREFS_KEY = 'mofradPrefs';
+        function loadPrefs(){ try { return JSON.parse(localStorage.getItem(PREFS_KEY)) || {}; } catch(e){ return {}; } }
+        function savePrefs(p){ try { localStorage.setItem(PREFS_KEY, JSON.stringify(p)); } catch(e){} }
+        function updateSettingsButtons(theme, fs){
+            document.querySelectorAll('.opt-btn[data-fs]').forEach(function(b){
+                b.classList.toggle('active', b.getAttribute('data-fs') === fs);
+            });
+            document.querySelectorAll('.opt-btn[data-theme-btn]').forEach(function(b){
+                b.classList.toggle('active', b.getAttribute('data-theme-btn') === theme);
+            });
+        }
+        function applyPrefs(){
+            var p = loadPrefs();
+            var theme = p.theme === 'dark' ? 'dark' : 'light';
+            var fs = ['sm','md','lg','xl'].indexOf(p.fontSize) >= 0 ? p.fontSize : 'md';
+            document.documentElement.setAttribute('data-theme', theme);
+            document.documentElement.setAttribute('data-fs', fs);
+            updateSettingsButtons(theme, fs);
+        }
+        function setTheme(mode){
+            var p = loadPrefs(); p.theme = (mode === 'dark' ? 'dark' : 'light'); savePrefs(p);
+            document.documentElement.setAttribute('data-theme', p.theme);
+            updateSettingsButtons(p.theme, document.documentElement.getAttribute('data-fs') || 'md');
+        }
+        function setFontSize(size){
+            if (['sm','md','lg','xl'].indexOf(size) < 0) size = 'md';
+            var p = loadPrefs(); p.fontSize = size; savePrefs(p);
+            document.documentElement.setAttribute('data-fs', size);
+            updateSettingsButtons(document.documentElement.getAttribute('data-theme') || 'light', size);
+        }
+
+        // ══════════ mofradUsers helpers (بۆ گۆڕینی ناو/وشەی نهێنی) ══════════
+        function getUsersLS(){ try { return JSON.parse(localStorage.getItem('mofradUsers')) || []; } catch(e){ return []; } }
+        function saveUsersLS(u){ localStorage.setItem('mofradUsers', JSON.stringify(u)); }
+
+        // ══════════ گۆڕینی ناوی پیشاندان ══════════
+        function changeDisplayName(){
+            var el = document.getElementById('setDisplayName');
+            var name = (el.value || '').trim();
+            if (!name){ showToast('تکایە ناوێک بنووسە', 'error'); return; }
+            if (!currentUser){ showToast('هەڵە: بەکارهێنەر نەدۆزرایەوە', 'error'); return; }
+            var users = getUsersLS();
+            var i = users.findIndex(function(u){ return u.username === currentUser.username; });
+            if (i < 0){ showToast('هەڵە: بەکارهێنەر نەدۆزرایەوە', 'error'); return; }
+            users[i].name = name; saveUsersLS(users);
+            currentUser.name = name;
+            try { localStorage.setItem('mofradSession', JSON.stringify(currentUser)); } catch(e){}
+            var badge = document.getElementById('userBadge'); if (badge) badge.textContent = name;
+            el.value = '';
+            showToast('ناو نوێکرایەوە ✅', 'success');
+        }
+
+        // ══════════ گۆڕینی وشەی نهێنی ══════════
+        function changePassword(){
+            var cur = document.getElementById('setCurrentPass').value;
+            var nw  = document.getElementById('setNewPass').value;
+            var cf  = document.getElementById('setConfirmPass').value;
+            if (!currentUser){ showToast('هەڵە: بەکارهێنەر نەدۆزرایەوە', 'error'); return; }
+            var users = getUsersLS();
+            var i = users.findIndex(function(u){ return u.username === currentUser.username; });
+            if (i < 0){ showToast('هەڵە: بەکارهێنەر نەدۆزرایەوە', 'error'); return; }
+            if (users[i].password !== cur){ showToast('وشەی نهێنیی ئێستا هەڵەیە', 'error'); return; }
+            if (!nw || nw.length < 4){ showToast('وشەی نوێ دەبێت لانیکەم ٤ پیت بێت', 'error'); return; }
+            if (nw !== cf){ showToast('دووبارەکردنەوەی وشە یەک ناگرێتەوە', 'error'); return; }
+            users[i].password = nw; saveUsersLS(users);
+            document.getElementById('setCurrentPass').value = '';
+            document.getElementById('setNewPass').value = '';
+            document.getElementById('setConfirmPass').value = '';
+            showToast('وشەی نهێنی گۆڕدرا ✅', 'success');
+        }
+
+
+        // ==================== SESSION ====================
+
+        function getSession() {
+            try {
+                const s = localStorage.getItem('mofradSession');
+                return s ? JSON.parse(s) : null;
+            } catch(e) { return null; }
+        }
+
+        function doLogout() {
+            if (confirm('دڵنیایت دەتەوێت دەرچیت؟')) {
+                localStorage.removeItem('mofradSession');
+                window.location.replace('index.html');
+            }
+        }
+
+        // Initialize
+        function init() {
+            const session = getSession();
+            if (!session || !session.username) {
+                window.location.replace('index.html');
+                return;
+            }
+            currentUser = session;
+
+            // ناوی کەسەکە لە header
+            const badge = document.getElementById('userBadge');
+            if (badge) badge.textContent = session.name || session.username;
+
+            loadData();
+            refreshIdCounter();
+            applyPrefs();
+            updateAllStats();
+            renderSalesList();
+            renderExpensesList();
+            renderPurchasesList();
+            updateCompanySelects();
+            renderCompaniesList();
+            renderTodaySummary();
+            renderRecentActivities();
+            setupCurrencyInputs();
+            updateCurrentDate();
+            
+            setInterval(() => { updateCurrentDate(); }, 60000);
+        }
+
+        // ==================== CURRENCY FORMATTING ====================
+        
+        function formatNumberInput(value) {
+            // Remove all non-digits
+            let number = value.replace(/\D/g, '');
+            // Max 15 digits (بۆ ئەوەی JavaScript float precision نەشکێت)
+            if (number.length > 15) number = number.slice(0, 15);
+            // Add commas
+            return number.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+        
+        function parseFormattedNumber(value) {
+            if (!value) return 0;
+            const num = parseFloat(String(value).replace(/,/g, '')) || 0;
+            // سنووری زۆرترین پارە: 999 trillion IQD
+            return Math.min(num, 999_999_999_999_999);
+        }
+        
+        function setupCurrencyInputs() {
+            // Add event listeners to all currency inputs
+            document.querySelectorAll('.currency').forEach(input => {
+                input.addEventListener('input', function(e) {
+                    const cursorPosition = this.selectionStart;
+                    const oldLength = this.value.length;
+                    const oldValue = this.value;
+                    
+                    // Format the number
+                    this.value = formatNumberInput(this.value);
+                    
+                    // Adjust cursor position
+                    const newLength = this.value.length;
+                    const newPosition = cursorPosition + (newLength - oldLength);
+                    this.setSelectionRange(newPosition, newPosition);
+                });
+            });
+        }
+
+        // ==================== DATA MANAGEMENT ====================
+
+        // کی پرێفیکس داتاکان بە username تایبەت دەکات
+        function dataKey(name) {
+            const u = currentUser ? currentUser.username : 'default';
+            return 'mofrad_' + u + '_' + name;
+        }
+        
+        function loadData() {
+            try {
+                const savedSales     = localStorage.getItem(dataKey('sales'));
+                const savedExpenses  = localStorage.getItem(dataKey('expenses'));
+                const savedPurchases = localStorage.getItem(dataKey('purchases'));
+                const savedCompanies = localStorage.getItem(dataKey('companies'));
+                
+                if (savedSales)     sales     = JSON.parse(savedSales);
+                if (savedExpenses)  expenses  = JSON.parse(savedExpenses);
+                if (savedPurchases) purchases = JSON.parse(savedPurchases);
+                if (savedCompanies) companies = JSON.parse(savedCompanies);
+
+                if (!Array.isArray(sales))     sales     = [];
+                if (!Array.isArray(expenses))  expenses  = [];
+                if (!Array.isArray(purchases)) purchases = [];
+                if (!Array.isArray(companies)) companies = [];
+            } catch(e) {
+                console.error('loadData error:', e);
+                sales = []; expenses = []; purchases = []; companies = [];
+            }
+        }
+
+        function saveData() {
+            try {
+                localStorage.setItem(dataKey('sales'),     JSON.stringify(sales));
+                localStorage.setItem(dataKey('expenses'),  JSON.stringify(expenses));
+                localStorage.setItem(dataKey('purchases'), JSON.stringify(purchases));
+                localStorage.setItem(dataKey('companies'), JSON.stringify(companies));
+            } catch(e) {
+                if (e.name === 'QuotaExceededError' || e.code === 22) {
+                    showToast('⚠️ بیرگەی مۆبایل پڕەو! تکایە چەند وێنەیەک بسڕەوە', 'error');
+                } else {
+                    console.error('saveData error:', e);
+                }
+            }
+        }
+
+        // ==================== UTILITY FUNCTIONS ====================
+        
+        // پارەی تەواو بۆ هەموو شوێن
+        function formatNumber(num) {
+            if (num === null || num === undefined || isNaN(num)) return '0';
+            return new Intl.NumberFormat('en-US').format(Math.round(num));
+        }
+
+        // font-size بەخۆیی بە پێی درێژی عددەکە کەمتر دەکات
+        function applyStatFontSize(elId, text) {
+            const el = document.getElementById(elId);
+            if (!el) return;
+            el.textContent = text;
+            const len = text.replace(/,/g, '').length;
+            el.className = 'stat-value';
+            if      (len >= 16) el.classList.add('len-16');
+            else if (len >= 13) el.classList.add('len-13');
+            else if (len >= 10) el.classList.add('len-10');
+            else if (len >= 8)  el.classList.add('len-8');
+        }
+
+        function getTodayDate() {
+            // Get Iraq timezone date (UTC+3)
+            const now = new Date();
+            const iraqTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Baghdad' }));
+            const year = iraqTime.getFullYear();
+            const month = String(iraqTime.getMonth() + 1).padStart(2, '0');
+            const day = String(iraqTime.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+        
+        function formatDateKurdish(dateStr) {
+            const months = ['کانوونی دووەم', 'شوبات', 'ئازار', 'نیسان', 'ئایار', 'حوزەیران', 
+                           'تەمموز', 'ئاب', 'ئەیلول', 'تشرینی یەکەم', 'تشرینی دووەم', 'کانوونی یەکەم'];
+            const date = new Date(dateStr);
+            const day = date.getDate();
+            const month = months[date.getMonth()];
+            const year = date.getFullYear();
+            return `${day}ی ${month}، ${year}`;
+        }
+        
+        function updateCurrentDate() {
+            const dateDisplay = document.getElementById('currentDateDisplay');
+            if (dateDisplay) {
+                dateDisplay.textContent = formatDateKurdish(getTodayDate());
+            }
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            
+            // Remove any existing show class first
+            toast.classList.remove('show');
+            
+            // Force reflow to restart animation
+            void toast.offsetWidth;
+            
+            // Set message and type
+            toast.textContent = message;
+            toast.className = `toast ${type}`;
+            
+            // Show toast after a tiny delay to ensure animation works
+            requestAnimationFrame(() => {
+                toast.classList.add('show');
+            });
+            
+            // Hide after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        function showPage(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(page + 'Page').classList.add('active');
+            
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            window.scrollTo(0, 0);
+        }
+
+        // ==================== STATS CALCULATION ====================
+        
+        function calculateTotalSales() {
+            return sales.reduce((sum, sale) => sum + sale.amount, 0);
+        }
+
+        function calculateTotalExpenses() {
+            return expenses.reduce((sum, expense) => sum + expense.amount, 0);
+        }
+
+        function calculateTotalPurchaseCost() {
+            return purchases.reduce((sum, purchase) => sum + purchase.totalCost, 0);
+        }
+
+        function calculateTotalPurchaseProfit() {
+            return purchases.reduce((sum, purchase) => sum + purchase.profit, 0);
+        }
+
+        function calculateTotalPurchaseSell() {
+            return purchases.reduce((sum, p) => sum + p.totalSell, 0);
+        }
+
+        function calculateProfit() {
+            const totalSales = calculateTotalSales();
+            const totalPurchaseSell = calculateTotalPurchaseSell();
+            const totalExpenses = calculateTotalExpenses();
+            // قازانج = کۆی فرۆشتن - کۆی فرۆشتنی کڕین - کۆی خەرجی
+            return totalSales - totalPurchaseSell - totalExpenses;
+        }
+
+        function updateAllStats() {
+            const totalSales = calculateTotalSales();
+            const totalPurchaseCost = calculateTotalPurchaseCost();
+            const totalPurchaseSell = calculateTotalPurchaseSell();
+            const totalExpense = calculateTotalExpenses();
+            
+            // قازانج/زەرەر = کۆی فرۆشتن - کۆی فرۆشتنی کڕین - کۆی خەرجی
+            const profit = totalSales - totalPurchaseSell - totalExpense;
+            const purchaseProfit = calculateTotalPurchaseProfit();
+
+            // Home page stats — font-size بەخۆیی بە پێی درێژی عددەکە
+            applyStatFontSize('homeTotalSales',    formatNumber(totalSales));
+            applyStatFontSize('homeTotalPurchase', formatNumber(totalPurchaseSell));
+            applyStatFontSize('homeTotalExpense',  formatNumber(totalExpense));
+            applyStatFontSize('homeProfit',        formatNumber(profit));
+            
+            // Color profit card
+            const profitCard = document.getElementById('homeProfitCard');
+            if (profit >= 0) {
+                profitCard.style.background = 'linear-gradient(135deg, #10B981 0%, #059669 100%)';
+            } else {
+                profitCard.style.background = 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)';
+            }
+
+            // Sales page stats
+            const daySales = sales.filter(s => s.type === 'عەسر').reduce((sum, s) => sum + s.amount, 0);
+            const nightSales = sales.filter(s => s.type === 'شەو').reduce((sum, s) => sum + s.amount, 0);
+            applyStatFontSize('totalDaySales',  formatNumber(daySales));
+            applyStatFontSize('totalNightSales', formatNumber(nightSales));
+            document.getElementById('totalAllSales').textContent = formatNumber(totalSales);
+
+            // Expenses page stats
+            document.getElementById('totalExpenses').textContent = formatNumber(totalExpense);
+
+            // Purchase page stats
+            applyStatFontSize('totalPurchaseCost', formatNumber(totalPurchaseCost));
+            applyStatFontSize('totalPurchaseSell', formatNumber(totalPurchaseSell));
+            document.getElementById('totalPurchaseProfit').textContent = formatNumber(purchaseProfit);
+        }
+
+        // ==================== SALES FUNCTIONS ====================
+        
+        function addSale() {
+            const type = document.getElementById('saleType').value;
+            const amount = parseFormattedNumber(document.getElementById('saleAmount').value);
+            const note = document.getElementById('saleNote').value.trim();
+
+            if (amount <= 0) {
+                showToast('تکایە بڕی پارە داخڵ بکە', 'error');
+                return;
+            }
+
+            const sale = {
+                id: uid(),
+                type: type,
+                amount: amount,
+                note: note,
+                date: getTodayDate(),
+                createdAt: new Date().toISOString()
+            };
+
+            sales.unshift(sale);
+            saveData();
+            updateAllStats();
+            renderSalesList();
+            renderTodaySummary();
+            renderRecentActivities();
+
+            // Clear form
+            document.getElementById('saleAmount').value = '';
+            document.getElementById('saleNote').value = '';
+
+            showToast('فرۆشتن بە سەرکەوتوویی زیادکرا', 'success');
+        }
+
+        function deleteSale(id) {
+            if (confirm('دڵنیایت دەتەوێت ئەم فرۆشتنە بسڕیتەوە؟')) {
+                sales = sales.filter(s => s.id !== id);
+                saveData();
+                updateAllStats();
+                renderSalesList();
+                renderTodaySummary();
+                renderRecentActivities();
+                showToast('فرۆشتن سڕایەوە', 'success');
+            }
+        }
+
+        function editSale(id) {
+            const sale = sales.find(s => s.id === id);
+            if (!sale) return;
+
+            const newAmount = prompt('بڕی پارەی نوێ:', formatNumber(sale.amount));
+            if (newAmount === null) return;
+
+            const amount = parseFormattedNumber(newAmount);
+            if (isNaN(amount) || amount <= 0) {
+                showToast('بڕی پارە نادروستە', 'error');
+                return;
+            }
+
+            sale.amount = amount;
+            saveData();
+            updateAllStats();
+            renderSalesList();
+            renderTodaySummary();
+            renderRecentActivities();
+            showToast('فرۆشتن نوێکرایەوە', 'success');
+        }
+
+        function filterSales(type) {
+            currentSalesFilter = type;
+            
+            // Update active button
+            document.querySelectorAll('#salesPage .filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            renderSalesList();
+        }
+
+        function renderSalesList() {
+            const container = document.getElementById('salesList');
+            let filteredSales = sales;
+
+            if (currentSalesFilter !== 'all') {
+                filteredSales = sales.filter(s => s.type === currentSalesFilter);
+            }
+
+            if (filteredSales.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📭</div>
+                        <p>هیچ فرۆشتنێک نییە</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filteredSales.map(sale => `
+                <div class="item">
+                    <div class="item-header">
+                        <div>
+                            <div class="item-title">${escapeHtml(sale.type)}</div>
+                            <div class="item-meta">${escapeHtml(sale.date)}${sale.note ? ' • ' + escapeHtml(sale.note) : ''}</div>
+                        </div>
+                        <div class="item-price">${formatNumber(sale.amount)}</div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn btn-secondary btn-small" onclick="editSale(${sale.id})">دەستکاری</button>
+                        <button class="btn btn-danger btn-small" onclick="deleteSale(${sale.id})">سڕینەوە</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ==================== EXPENSES FUNCTIONS ====================
+        
+        function addExpense() {
+            const item = document.getElementById('expenseItem').value.trim();
+            const amount = parseFormattedNumber(document.getElementById('expenseAmount').value);
+            const note = document.getElementById('expenseNote').value.trim();
+
+            if (!item) {
+                showToast('تکایە ناوی بابەت داخڵ بکە', 'error');
+                return;
+            }
+
+            if (amount <= 0) {
+                showToast('تکایە بڕی پارە داخڵ بکە', 'error');
+                return;
+            }
+
+            const expense = {
+                id: uid(),
+                item: item,
+                amount: amount,
+                note: note,
+                date: getTodayDate(),
+                createdAt: new Date().toISOString()
+            };
+
+            expenses.unshift(expense);
+            saveData();
+            updateAllStats();
+            renderExpensesList();
+            renderRecentActivities();
+
+            // Clear form
+            document.getElementById('expenseItem').value = '';
+            document.getElementById('expenseAmount').value = '';
+            document.getElementById('expenseNote').value = '';
+
+            showToast('خەرجی بە سەرکەوتوویی زیادکرا', 'success');
+        }
+
+        function deleteExpense(id) {
+            if (confirm('دڵنیایت دەتەوێت ئەم خەرجییە بسڕیتەوە؟')) {
+                expenses = expenses.filter(e => e.id !== id);
+                saveData();
+                updateAllStats();
+                renderExpensesList();
+                renderRecentActivities();
+                showToast('خەرجی سڕایەوە', 'success');
+            }
+        }
+
+        function editExpense(id) {
+            const expense = expenses.find(e => e.id === id);
+            if (!expense) return;
+
+            const newAmount = prompt('بڕی پارەی نوێ:', formatNumber(expense.amount));
+            if (newAmount === null) return;
+
+            const amount = parseFormattedNumber(newAmount);
+            if (isNaN(amount) || amount <= 0) {
+                showToast('بڕی پارە نادروستە', 'error');
+                return;
+            }
+
+            expense.amount = amount;
+            saveData();
+            updateAllStats();
+            renderExpensesList();
+            renderRecentActivities();
+            showToast('خەرجی نوێکرایەوە', 'success');
+        }
+
+        function renderExpensesList() {
+            const container = document.getElementById('expensesList');
+
+            if (expenses.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📭</div>
+                        <p>هیچ خەرجییەک نییە</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = expenses.map(expense => `
+                <div class="item">
+                    <div class="item-header">
+                        <div>
+                            <div class="item-title">${escapeHtml(expense.item)}</div>
+                            <div class="item-meta">${escapeHtml(expense.date)}${expense.note ? ' • ' + escapeHtml(expense.note) : ''}</div>
+                        </div>
+                        <div class="item-price" style="color: var(--danger);">${formatNumber(expense.amount)}</div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn btn-secondary btn-small" onclick="editExpense(${expense.id})">دەستکاری</button>
+                        <button class="btn btn-danger btn-small" onclick="deleteExpense(${expense.id})">سڕینەوە</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ==================== COMPANIES FUNCTIONS ====================
+        
+        function addCompany() {
+            const name = document.getElementById('newCompanyName').value.trim();
+
+            if (!name) {
+                showToast('تکایە ناوی کۆمپانیا داخڵ بکە', 'error');
+                return;
+            }
+
+            if (companies.some(c => c.name === name)) {
+                showToast('ئەم کۆمپانیایە پێشتر زیادکراوە', 'error');
+                return;
+            }
+
+            const company = {
+                id: uid(),
+                name: name,
+                createdAt: new Date().toISOString()
+            };
+
+            companies.push(company);
+            saveData();
+            updateCompanySelects();
+            renderCompaniesList();
+
+            document.getElementById('newCompanyName').value = '';
+            showToast('کۆمپانیا بە سەرکەوتوویی زیادکرا', 'success');
+        }
+
+        function deleteCompany(id) {
+            if (confirm('دڵنیایت دەتەوێت ئەم کۆمپانیایە بسڕیتەوە؟')) {
+                companies = companies.filter(c => c.id !== id);
+                saveData();
+                updateCompanySelects();
+                renderCompaniesList();
+                showToast('کۆمپانیا سڕایەوە', 'success');
+            }
+        }
+
+        function updateCompanySelects() {
+            const selects = [
+                document.getElementById('purchaseCompany'),
+                document.getElementById('reportCompany')
+            ];
+
+            selects.forEach(select => {
+                const currentValue = select.value;
+                select.innerHTML = '<option value="">کۆمپانیایەک هەڵبژێرە...</option>' +
+                    companies.map(c => `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)}</option>`).join('');
+                select.value = currentValue;
+            });
+        }
+
+        function renderCompaniesList() {
+            const container = document.getElementById('companiesList');
+
+            if (companies.length === 0) {
+                container.innerHTML = '<div style="color: var(--text-light); text-align: center; padding: 12px;">هیچ کۆمپانیایەک نییە</div>';
+                return;
+            }
+
+            container.innerHTML = companies.map(company => `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: var(--bg); border-radius: 8px; margin-bottom: 8px;">
+                    <span style="font-weight: 600;">${escapeHtml(company.name)}</span>
+                    <button class="btn btn-danger btn-small" onclick="deleteCompany(${company.id})">سڕینەوە</button>
+                </div>
+            `).join('');
+        }
+
+        // ==================== IMAGE FUNCTIONS ====================
+
+        let currentPurchaseImage = null; // base64 string یان null
+
+        function triggerImgUpload() {
+            // ئەگەر وێنەیەک هەیە کلیک نەکرێت
+            if (currentPurchaseImage) return;
+            document.getElementById('purchaseImgInput').click();
+        }
+
+        function handleImgUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // پشکنینی جۆری فایل
+            if (!file.type.startsWith('image/')) {
+                showToast('تەنها وێنە قبوڵ دەکرێت', 'error');
+                return;
+            }
+
+            // پشکنینی قەبارەی فایل (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                showToast('وێنەکە زۆر گەورەیە (زیاتر لە 5MB)', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // Compress image بۆ ئەوەی localStorage زیاد نەگرێت
+                compressImage(e.target.result, 800, 0.75, function(compressed) {
+                    currentPurchaseImage = compressed;
+                    showImgPreview(compressed);
+                });
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function compressImage(base64, maxWidth, quality, callback) {
+            const img = new Image();
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+
+                // Resize ئەگەر زۆر گەورەیە
+                if (width > maxWidth) {
+                    height = Math.round((height * maxWidth) / width);
+                    width = maxWidth;
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                callback(canvas.toDataURL('image/jpeg', quality));
+            };
+            img.src = base64;
+        }
+
+        function showImgPreview(base64) {
+            const area = document.getElementById('purchaseImgArea');
+            const placeholder = document.getElementById('purchaseImgPlaceholder');
+            const preview = document.getElementById('purchaseImgPreview');
+            const removeBtn = document.getElementById('purchaseImgRemove');
+
+            preview.src = base64;
+            preview.style.display = 'block';
+            placeholder.style.display = 'none';
+            removeBtn.style.display = 'flex';
+            area.classList.add('has-image');
+        }
+
+        function removeImg(event) {
+            event.stopPropagation();
+            currentPurchaseImage = null;
+            const area = document.getElementById('purchaseImgArea');
+            const placeholder = document.getElementById('purchaseImgPlaceholder');
+            const preview = document.getElementById('purchaseImgPreview');
+            const removeBtn = document.getElementById('purchaseImgRemove');
+            const input = document.getElementById('purchaseImgInput');
+
+            preview.src = '';
+            preview.style.display = 'none';
+            placeholder.style.display = 'block';
+            removeBtn.style.display = 'none';
+            area.classList.remove('has-image');
+            input.value = '';
+        }
+
+        function clearImgUpload() {
+            currentPurchaseImage = null;
+            const area = document.getElementById('purchaseImgArea');
+            const placeholder = document.getElementById('purchaseImgPlaceholder');
+            const preview = document.getElementById('purchaseImgPreview');
+            const removeBtn = document.getElementById('purchaseImgRemove');
+            const input = document.getElementById('purchaseImgInput');
+
+            if (preview) {
+                preview.src = '';
+                preview.style.display = 'none';
+                placeholder.style.display = 'block';
+                removeBtn.style.display = 'none';
+                area.classList.remove('has-image');
+                input.value = '';
+            }
+        }
+
+        // ==================== PURCHASE FUNCTIONS ====================
+        
+        function calculatePurchaseProfit() {
+            const price = parseFormattedNumber(document.getElementById('purchasePrice').value);
+            const quantity = parseFormattedNumber(document.getElementById('purchaseQuantity').value);
+            const sellPrice = parseFormattedNumber(document.getElementById('purchaseSellPrice').value);
+
+            const totalCost = price * quantity;
+            const totalSell = sellPrice * quantity;
+            const profit = totalSell - totalCost;
+
+            document.getElementById('purchaseTotalCost').value = formatNumber(totalCost);
+            document.getElementById('purchaseTotalSell').value = formatNumber(totalSell);
+            document.getElementById('purchaseProfit').value = formatNumber(profit);
+        }
+
+        function addPurchase() {
+            const company = document.getElementById('purchaseCompany').value || 'نەزانراو';
+            const item = document.getElementById('purchaseItem').value.trim();
+            const price = parseFormattedNumber(document.getElementById('purchasePrice').value);
+            const quantity = parseFormattedNumber(document.getElementById('purchaseQuantity').value);
+            const sellPrice = parseFormattedNumber(document.getElementById('purchaseSellPrice').value);
+            const note = document.getElementById('purchaseNote').value.trim();
+
+            if (!item) {
+                showToast('تکایە ناوی بابەت داخڵ بکە', 'error');
+                return;
+            }
+
+            // هەموو ئینپوتەکان ئیختیارین بەجز ناوی بابەت
+            // گەر نرخ یان عەدەد نەدرا، 0 دەبێت
+            const totalCost = price * quantity;
+            const totalSell = sellPrice * quantity;
+            const profit = totalSell - totalCost;
+
+            const purchase = {
+                id: uid(),
+                company: company,
+                item: item,
+                price: price,
+                quantity: quantity,
+                totalCost: totalCost,
+                sellPrice: sellPrice,
+                totalSell: totalSell,
+                profit: profit,
+                note: note,
+                image: currentPurchaseImage || null,
+                date: getTodayDate(),
+                createdAt: new Date().toISOString()
+            };
+
+            purchases.unshift(purchase);
+            saveData();
+            updateAllStats();
+            renderPurchasesList();
+            renderRecentActivities();
+
+            // Clear form
+            document.getElementById('purchaseCompany').value = '';
+            document.getElementById('purchaseItem').value = '';
+            document.getElementById('purchasePrice').value = '';
+            document.getElementById('purchaseQuantity').value = '';
+            document.getElementById('purchaseSellPrice').value = '';
+            document.getElementById('purchaseNote').value = '';
+            document.getElementById('purchaseTotalCost').value = '';
+            document.getElementById('purchaseTotalSell').value = '';
+            document.getElementById('purchaseProfit').value = '';
+            clearImgUpload();
+
+            showToast('کڕین بە سەرکەوتوویی زیادکرا', 'success');
+        }
+
+        function deletePurchase(id) {
+            if (confirm('دڵنیایت دەتەوێت ئەم کڕینە بسڕیتەوە؟')) {
+                purchases = purchases.filter(p => p.id !== id);
+                saveData();
+                updateAllStats();
+                renderPurchasesList();
+                renderRecentActivities();
+                showToast('کڕین سڕایەوە', 'success');
+            }
+        }
+
+        function editPurchase(id) {
+            const purchase = purchases.find(p => p.id === id);
+            if (!purchase) return;
+
+            // For simplicity, just allow editing the sell price
+            const newSellPrice = prompt('نرخی فرۆشتنی نوێ (یەک دانە):', formatNumber(purchase.sellPrice));
+            if (newSellPrice === null) return;
+
+            const sellPrice = parseFormattedNumber(newSellPrice);
+            if (isNaN(sellPrice) || sellPrice <= 0) {
+                showToast('نرخ نادروستە', 'error');
+                return;
+            }
+
+            purchase.sellPrice = sellPrice;
+            purchase.totalSell = sellPrice * purchase.quantity;
+            purchase.profit = purchase.totalSell - purchase.totalCost;
+
+            saveData();
+            updateAllStats();
+            renderPurchasesList();
+            renderRecentActivities();
+            showToast('کڕین نوێکرایەوە', 'success');
+        }
+
+        function renderPurchasesList() {
+            const container = document.getElementById('purchasesList');
+
+            if (purchases.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📭</div>
+                        <p>هیچ کڕینێک نییە</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = purchases.map(purchase => `
+                <div class="item">
+                    ${purchase.image ? `<img src="${purchase.image}" class="purchase-item-img" alt="${escapeHtml(purchase.item)}" loading="lazy">` : ''}
+                    <div class="item-header">
+                        <div>
+                            <div class="item-title">${escapeHtml(purchase.item)}</div>
+                            <div class="item-meta">
+                                ${escapeHtml(purchase.company)} • ${formatNumber(purchase.quantity)} دانە • ${escapeHtml(purchase.date)}
+                            </div>
+                        </div>
+                        <div>
+                            <div class="item-price">${formatNumber(purchase.totalCost)}</div>
+                            <div style="font-size: 12px; color: var(--success); font-weight: 600; text-align: left;">
+                                قازانج: ${formatNumber(purchase.profit)}
+                            </div>
+                        </div>
+                    </div>
+                    ${purchase.note ? `<div style="font-size: 13px; color: var(--text-light); margin-top: 4px;">${escapeHtml(purchase.note)}</div>` : ''}
+                    <div class="item-actions">
+                        <button class="btn btn-secondary btn-small" onclick="editPurchase(${purchase.id})">دەستکاری</button>
+                        <button class="btn btn-danger btn-small" onclick="deletePurchase(${purchase.id})">سڕینەوە</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ==================== HOME PAGE FUNCTIONS ====================
+        
+        function renderTodaySummary() {
+            const today = getTodayDate();
+            const todaySales = sales.filter(s => s.date === today);
+            const daySales = todaySales.filter(s => s.type === 'عەسر').reduce((sum, s) => sum + s.amount, 0);
+            const nightSales = todaySales.filter(s => s.type === 'شەو').reduce((sum, s) => sum + s.amount, 0);
+            const total = daySales + nightSales;
+
+            const container = document.getElementById('todaySalesSummary');
+            
+            if (todaySales.length === 0) {
+                container.innerHTML = '<div class="empty-state" style="padding: 20px;"><div class="empty-icon">📭</div><p>هیچ فرۆشتنێک نییە ئەمڕۆ</p></div>';
+                return;
+            }
+
+            container.innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+                    <div style="text-align: center; padding: 12px; background: var(--bg); border-radius: 10px;">
+                        <div style="font-size: 12px; color: var(--text-light); margin-bottom: 4px;">عەسر</div>
+                        <div style="font-size: 18px; font-weight: 700; color: var(--primary);">${formatNumber(daySales)}</div>
+                    </div>
+                    <div style="text-align: center; padding: 12px; background: var(--bg); border-radius: 10px;">
+                        <div style="font-size: 12px; color: var(--text-light); margin-bottom: 4px;">شەو</div>
+                        <div style="font-size: 18px; font-weight: 700; color: var(--secondary);">${formatNumber(nightSales)}</div>
+                    </div>
+                    <div style="text-align: center; padding: 12px; background: var(--bg); border-radius: 10px;">
+                        <div style="font-size: 12px; color: var(--text-light); margin-bottom: 4px;">کۆ</div>
+                        <div style="font-size: 18px; font-weight: 700; color: var(--success);">${formatNumber(total)}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderRecentActivities() {
+            const container = document.getElementById('recentActivities');
+            
+            // Combine all activities
+            const activities = [
+                ...sales.map(s => ({ ...s, actType: 'فرۆشتن', icon: '💰' })),
+                ...expenses.map(e => ({ ...e, actType: 'خەرجی', icon: '💸' })),
+                ...purchases.map(p => ({ ...p, actType: 'کڕین', icon: '📦' }))
+            ].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5);
+
+            if (activities.length === 0) {
+                container.innerHTML = '<div class="empty-state" style="padding: 20px;"><div class="empty-icon">📭</div><p>هیچ چالاکییەک نییە</p></div>';
+                return;
+            }
+
+            container.innerHTML = activities.map(activity => {
+                let title = '';
+                let amount = 0;
+                let imgHtml = '';
+                
+                if (activity.actType === 'فرۆشتن') {
+                    title = `فرۆشتنی ${activity.type}`;
+                    amount = activity.amount;
+                } else if (activity.actType === 'خەرجی') {
+                    title = activity.item;
+                    amount = activity.amount;
+                } else {
+                    title = activity.item;
+                    amount = activity.totalCost;
+                    if (activity.image) {
+                        imgHtml = `<img src="${activity.image}" style="width:40px; height:40px; object-fit:cover; border-radius:8px; flex-shrink:0;" alt="${escapeHtml(activity.item)}" loading="lazy">`;
+                    }
+                }
+
+                return `
+                    <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--bg); border-radius: 10px; margin-bottom: 8px;">
+                        ${imgHtml || `<div style="font-size: 28px; flex-shrink:0;">${activity.icon}</div>`}
+                        <div style="flex: 1; min-width:0;">
+                            <div style="font-weight: 600; font-size: 14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(title)}</div>
+                            <div style="font-size: 12px; color: var(--text-light);">${escapeHtml(activity.date)}</div>
+                        </div>
+                        <div style="font-weight: 700; color: ${activity.actType === 'خەرجی' ? 'var(--danger)' : 'var(--primary)'}; flex-shrink:0;">
+                            ${formatNumber(amount)}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ==================== REPORTS FUNCTIONS ====================
+        
+        function setReportType(type) {
+            currentReportType = type;
+            
+            document.querySelectorAll('#reportsPage .card:first-child .filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            if (type === 'general') {
+                document.getElementById('dateRangeCard').style.display = 'block';
+                document.getElementById('companySelectCard').style.display = 'none';
+            } else {
+                document.getElementById('dateRangeCard').style.display = 'none';
+                document.getElementById('companySelectCard').style.display = 'block';
+            }
+            
+            document.getElementById('reportOutput').innerHTML = '';
+        }
+
+        function setDateRange(range) {
+            currentDateRange = range;
+            
+            document.querySelectorAll('#dateRangeCard .filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            if (range === 'custom') {
+                document.getElementById('customDateRange').style.display = 'block';
+            } else {
+                document.getElementById('customDateRange').style.display = 'none';
+            }
+        }
+
+        function getDateRange() {
+            const today = new Date();
+            let startDate, endDate;
+
+            if (currentDateRange === 'week') {
+                startDate = new Date(today);
+                startDate.setDate(today.getDate() - 7);
+                endDate = today;
+            } else if (currentDateRange === 'month') {
+                startDate = new Date(today);
+                startDate.setDate(today.getDate() - 30);
+                endDate = today;
+            } else {
+                const start = document.getElementById('reportStartDate').value;
+                const end = document.getElementById('reportEndDate').value;
+                
+                if (!start || !end) {
+                    showToast('تکایە بەروار هەڵبژێرە', 'error');
+                    return null;
+                }
+                
+                startDate = new Date(start);
+                endDate = new Date(end);
+            }
+
+            return {
+                start: startDate.toISOString().split('T')[0],
+                end: endDate.toISOString().split('T')[0]
+            };
+        }
+
+        function generateReport() {
+            const range = getDateRange();
+            if (!range) return;
+            
+            // Filter data by date range
+            const filteredSales = sales.filter(s => s.date >= range.start && s.date <= range.end);
+            const filteredExpenses = expenses.filter(e => e.date >= range.start && e.date <= range.end);
+            const filteredPurchases = purchases.filter(p => p.date >= range.start && p.date <= range.end);
+
+            // Calculate totals
+            const totalSales = filteredSales.reduce((sum, s) => sum + s.amount, 0);
+            const daySales = filteredSales.filter(s => s.type === 'عەسر').reduce((sum, s) => sum + s.amount, 0);
+            const nightSales = filteredSales.filter(s => s.type === 'شەو').reduce((sum, s) => sum + s.amount, 0);
+            
+            const totalPurchaseCost = filteredPurchases.reduce((sum, p) => sum + p.totalCost, 0);
+            const totalPurchaseSell = filteredPurchases.reduce((sum, p) => sum + p.totalSell, 0);
+            const totalPurchaseProfit = filteredPurchases.reduce((sum, p) => sum + p.profit, 0);
+            
+            const totalExpenses = filteredExpenses.reduce((sum, e) => sum + e.amount, 0);
+            
+            // قازانج = کۆی فرۆشتن - کۆی فرۆشتنی کڕین - کۆی خەرجی
+            const profit = totalSales - totalPurchaseSell - totalExpenses;
+
+            const container = document.getElementById('reportOutput');
+            
+            let rangeText = '';
+            if (currentDateRange === 'week') {
+                rangeText = `${formatDateKurdish(range.start)} - ${formatDateKurdish(range.end)}`;
+            } else if (currentDateRange === 'month') {
+                rangeText = `${formatDateKurdish(range.start)} - ${formatDateKurdish(range.end)}`;
+            } else {
+                rangeText = `${formatDateKurdish(range.start)} - ${formatDateKurdish(range.end)}`;
+            }
+            
+            container.innerHTML = `
+                <div class="report-card">
+                    <div class="report-header">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <div>
+                                <div class="report-title">🏢 HR System</div>
+                                <div style="font-size: 14px; color: var(--text-light); margin-top: 4px;">ڕاپۆرتی گشتی</div>
+                            </div>
+                            <div style="text-align: left; font-size: 13px; color: var(--text-light);">
+                                <div>${escapeHtml(currentUser ? currentUser.name : "بەکارهێنەر")}</div>
+                                <div>${formatDateKurdish(getTodayDate())}</div>
+                            </div>
+                        </div>
+                        <div class="report-subtitle" style="text-align: center; font-size: 16px; font-weight: 600; color: var(--primary); padding: 8px; background: var(--bg); border-radius: 8px;">
+                            ${rangeText}
+                        </div>
+                    </div>
+                    
+                    <div style="background: var(--bg); padding: 16px; border-radius: 10px; margin-bottom: 16px;">
+                        <div style="font-weight: 700; font-size: 16px; margin-bottom: 12px; color: var(--primary);">فرۆشتنەکان</div>
+                        <div class="report-row" style="border: none; padding: 8px 0;">
+                            <span class="report-label">فرۆشتنی عەسر</span>
+                            <span class="report-value">${formatNumber(daySales)} IQD</span>
+                        </div>
+                        <div class="report-row" style="border: none; padding: 8px 0;">
+                            <span class="report-label">فرۆشتنی شەو</span>
+                            <span class="report-value">${formatNumber(nightSales)} IQD</span>
+                        </div>
+                        <div class="report-row" style="padding: 12px 0; margin-top: 8px; border-top: 2px solid var(--border);">
+                            <span class="report-label" style="font-size: 16px;">کۆی فرۆشتن</span>
+                            <span class="report-value" style="font-size: 20px; color: var(--primary);">${formatNumber(totalSales)} IQD</span>
+                        </div>
+                    </div>
+                    
+                    <div style="background: var(--bg); padding: 16px; border-radius: 10px; margin-bottom: 16px;">
+                        <div style="font-weight: 700; font-size: 16px; margin-bottom: 12px; color: var(--secondary);">کڕین و خەرجییەکان</div>
+                        <div class="report-row" style="border: none; padding: 8px 0;">
+                            <span class="report-label">کۆی کڕین</span>
+                            <span class="report-value">${formatNumber(totalPurchaseSell)} IQD</span>
+                        </div>
+                        <div class="report-row" style="border: none; padding: 8px 0;">
+                            <span class="report-label">کۆی خەرجییەکان</span>
+                            <span class="report-value">${formatNumber(totalExpenses)} IQD</span>
+                        </div>
+                        <div class="report-row" style="border: none; padding: 8px 0;">
+                            <span class="report-label">قازانجی کڕین</span>
+                            <span class="report-value positive">${formatNumber(totalPurchaseProfit)} IQD</span>
+                        </div>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, ${profit >= 0 ? '#10B981' : '#EF4444'} 0%, ${profit >= 0 ? '#059669' : '#DC2626'} 100%); padding: 20px; border-radius: 12px; text-align: center; color: white;">
+                        <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">قازانج/زەرەری گشتی</div>
+                        <div style="font-size: 32px; font-weight: 700; margin-bottom: 4px;">${formatNumber(profit)} IQD</div>
+                        <div style="font-size: 13px; opacity: 0.95;">
+                            ${profit >= 0 ? '✅ قازانج' : '⚠️ زەرەر'}
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 16px; padding: 12px; background: var(--bg); border-radius: 10px;">
+                        <div style="font-size: 13px; color: var(--text-light); text-align: center;">
+                            ژمارەی مامەڵەکان: ${filteredSales.length} فرۆشتن • ${filteredPurchases.length} کڕین • ${filteredExpenses.length} خەرجی
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn btn-primary btn-block" onclick="window.print()" style="margin-top: 16px;">
+                    🖨️ چاپکردنی ڕاپۆرت
+                </button>
+            `;
+        }
+
+        function generateCompanyReport() {
+            const company = document.getElementById('reportCompany').value;
+            
+            if (!company) {
+                showToast('تکایە کۆمپانیایەک هەڵبژێرە', 'error');
+                return;
+            }
+
+            // Filter purchases by company
+            const companyPurchases = purchases.filter(p => p.company === company);
+
+            if (companyPurchases.length === 0) {
+                showToast('هیچ کڕینێک نییە بۆ ئەم کۆمپانیایە', 'error');
+                return;
+            }
+
+            const totalCost = companyPurchases.reduce((sum, p) => sum + p.totalCost, 0);
+            const totalSell = companyPurchases.reduce((sum, p) => sum + p.totalSell, 0);
+            const totalProfit = companyPurchases.reduce((sum, p) => sum + p.profit, 0);
+            const profitMargin = ((totalProfit / totalCost) * 100).toFixed(1);
+
+            const container = document.getElementById('reportOutput');
+            
+            container.innerHTML = `
+                <div class="report-card">
+                    <div class="report-header">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <div>
+                                <div class="report-title">🏢 HR System</div>
+                                <div style="font-size: 14px; color: var(--text-light); margin-top: 4px;">ڕاپۆرتی کڕین</div>
+                            </div>
+                            <div style="text-align: left; font-size: 13px; color: var(--text-light);">
+                                <div>${escapeHtml(currentUser ? currentUser.name : "بەکارهێنەر")}</div>
+                                <div>${formatDateKurdish(getTodayDate())}</div>
+                            </div>
+                        </div>
+                        <div class="report-subtitle" style="text-align: center; font-size: 16px; font-weight: 600; color: var(--primary); padding: 8px; background: var(--bg); border-radius: 8px;">
+                            کۆمپانیای ${escapeHtml(company)}
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px;">
+                        <div style="background: var(--bg); padding: 16px; border-radius: 10px; text-align: center;">
+                            <div style="font-size: 12px; color: var(--text-light); margin-bottom: 4px;">ژمارەی کڕینەکان</div>
+                            <div style="font-size: 24px; font-weight: 700; color: var(--primary);">${companyPurchases.length}</div>
+                        </div>
+                        <div style="background: var(--bg); padding: 16px; border-radius: 10px; text-align: center;">
+                            <div style="font-size: 12px; color: var(--text-light); margin-bottom: 4px;">ڕێژەی قازانج</div>
+                            <div style="font-size: 24px; font-weight: 700; color: var(--success);">${profitMargin}%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="report-row">
+                        <span class="report-label">کۆی کڕین</span>
+                        <span class="report-value">${formatNumber(totalCost)} IQD</span>
+                    </div>
+                    
+                    <div class="report-row">
+                        <span class="report-label">کۆی فرۆشتن</span>
+                        <span class="report-value">${formatNumber(totalSell)} IQD</span>
+                    </div>
+                    
+                    <div class="report-row">
+                        <span class="report-label" style="font-size: 18px;">کۆی قازانج</span>
+                        <span class="report-value positive" style="font-size: 22px;">
+                            ${formatNumber(totalProfit)} IQD
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="icon">📋</span>
+                            وردەکاری کڕینەکان
+                        </div>
+                    </div>
+                    ${companyPurchases.map(p => `
+                        <div style="padding: 12px; background: var(--bg); border-radius: 8px; margin-bottom: 8px;">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+                                <div>
+                                    <div style="font-weight: 700; margin-bottom: 4px;">${escapeHtml(p.item)}</div>
+                                    <div style="font-size: 12px; color: var(--text-light);">${escapeHtml(p.date)}</div>
+                                </div>
+                                <div style="text-align: left;">
+                                    <div style="font-weight: 700; color: var(--primary);">${formatNumber(p.totalCost)} IQD</div>
+                                </div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding-top: 8px; border-top: 1px solid var(--border);">
+                                <div style="font-size: 12px;">
+                                    <span style="color: var(--text-light);">عەدەد:</span> <strong>${formatNumber(p.quantity)}</strong>
+                                </div>
+                                <div style="font-size: 12px;">
+                                    <span style="color: var(--text-light);">نرخی کڕین:</span> <strong>${formatNumber(p.price)}</strong>
+                                </div>
+                                <div style="font-size: 12px; text-align: left;">
+                                    <span style="color: var(--success); font-weight: 700;">قازانج: ${formatNumber(p.profit)}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <button class="btn btn-primary btn-block" onclick="window.print()">
+                    🖨️ چاپکردنی ڕاپۆرت
+                </button>
+            `;
+        }
+
+        // ==================== BACKUP FUNCTIONS ====================
+
+        function exportData() {
+            try {
+                const data = {
+                    version: '1.0',
+                    exportDate: new Date().toISOString(),
+                    sales: sales,
+                    expenses: expenses,
+                    purchases: purchases,
+                    companies: companies
+                };
+
+                const json = JSON.stringify(data, null, 2);
+                const blob = new Blob([json], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+
+                // بۆ ئایفۆن — لینک دروست دەکەین
+                const date = getTodayDate();
+                const uname = currentUser ? currentUser.username : 'backup';
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `HR-System-${uname}-${date}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                showToast('✅ داتاکان بە سەرکەوتوویی هەڵگیرا', 'success');
+            } catch(e) {
+                showToast('کێشەیەک ڕووی دا: ' + e.message, 'error');
+            }
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (!file.name.endsWith('.json')) {
+                showToast('تەنها فایلی JSON قبوڵ دەکرێت', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+
+                    // پشکنین
+                    if (!data.sales || !data.expenses || !data.purchases || !data.companies) {
+                        showToast('فایلەکە نادروستە یان خراپ بووە', 'error');
+                        return;
+                    }
+
+                    if (!confirm('دڵنیایت؟ داتاکانی ئێستا دەسڕێنەوە و داتاکانی فایلەکە جێگایان دەگرێتەوە.')) {
+                        return;
+                    }
+
+                    sales     = Array.isArray(data.sales)     ? data.sales     : [];
+                    expenses  = Array.isArray(data.expenses)  ? data.expenses  : [];
+                    purchases = Array.isArray(data.purchases) ? data.purchases : [];
+                    companies = Array.isArray(data.companies) ? data.companies : [];
+
+                    refreshIdCounter();
+                    saveData();
+                    updateAllStats();
+                    renderSalesList();
+                    renderExpensesList();
+                    renderPurchasesList();
+                    updateCompanySelects();
+                    renderCompaniesList();
+                    renderTodaySummary();
+                    renderRecentActivities();
+
+                    // input پاک دەکەمەوە
+                    document.getElementById('importInput').value = '';
+
+                    showToast('✅ داتاکان بە سەرکەوتوویی گەڕاندرانەوە', 'success');
+                } catch(err) {
+                    showToast('فایلەکە خراپ بووە، دووبارە هەوڵ بدەوە', 'error');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // ==================== INITIALIZE ====================
+        
+        // ── Service Worker: PWA + کارکردن بەبێ ئینتەرنێت ──
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function(){
+                navigator.serviceWorker.register('sw.js').catch(function(){});
+            });
+        }
+
+        init();
+    </script>
+</body>
+</html>

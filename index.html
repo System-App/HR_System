@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="HR System">
+    <meta name="theme-color" content="#059669">
+    <title>HR System</title>
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" href="icons/favicon-48.png" sizes="48x48">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+    <script>(function(){try{var p=JSON.parse(localStorage.getItem('mofradPrefs'))||{};var t=p.theme==='dark'?'dark':'light';var f=['sm','md','lg','xl'].indexOf(p.fontSize)>=0?p.fontSize:'md';var d=document.documentElement;d.setAttribute('data-theme',t);d.setAttribute('data-fs',f);}catch(e){}})();</script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap');
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+        :root{
+            --p:#059669;--pd:#047857;--pl:#10B981;
+            --bg:#FAFAF7;--bg2:#F3F0EA;
+            --card:#FFFFFF;--b:#E7E2D9;
+            --t:#1C1917;--t2:#44403C;--t3:#78716C;
+            --danger:#DC2626;--success:#059669;
+            --sh:0 2px 8px rgba(28,25,23,.09),0 8px 32px rgba(28,25,23,.09);
+        }
+        body{
+            font-family:'Vazirmatn',-apple-system,sans-serif;
+            background:linear-gradient(160deg,#F0FDF4 0%,#FAFAF7 40%,#FEF9EE 100%);
+            min-height:100vh;display:flex;flex-direction:column;
+            align-items:center;justify-content:center;
+            padding:24px 16px;direction:rtl;
+            -webkit-font-smoothing:antialiased;
+            position:relative;overflow:hidden;
+        }
+        /* خاڵەکانی ئەنیمیتەد پاشخان */
+        body::before{
+            content:'';position:fixed;top:-120px;right:-120px;
+            width:380px;height:380px;
+            background:radial-gradient(circle,rgba(5,150,105,.1) 0%,transparent 70%);
+            pointer-events:none;z-index:0;
+        }
+        body::after{
+            content:'';position:fixed;bottom:-100px;left:-100px;
+            width:320px;height:320px;
+            background:radial-gradient(circle,rgba(245,158,11,.08) 0%,transparent 70%);
+            pointer-events:none;z-index:0;
+        }
+
+        .wrap{width:100%;max-width:400px;position:relative;z-index:1}
+
+        /* LOGO */
+        .logo{text-align:center;margin-bottom:28px;animation:slideDown .55s cubic-bezier(.22,.68,0,1.2) both}
+        .logo-icon{
+            width:82px;height:82px;
+            background:linear-gradient(135deg,var(--pl),var(--p));
+            border-radius:24px;display:flex;align-items:center;
+            justify-content:center;font-size:38px;
+            margin:0 auto 14px;
+            box-shadow:0 8px 28px rgba(5,150,105,.3),0 2px 6px rgba(5,150,105,.2);
+        }
+        .logo-title{font-size:28px;font-weight:900;color:var(--t);letter-spacing:-.5px}
+        .logo-title .g{color:var(--p)}
+        .logo-sub{font-size:13px;color:var(--t3);margin-top:5px;font-weight:500}
+
+        /* CARD */
+        .card{
+            background:var(--card);border:1.5px solid var(--b);
+            border-radius:26px;padding:26px 22px;
+            box-shadow:var(--sh);
+            animation:slideUp .5s cubic-bezier(.22,.68,0,1.2) both .1s;
+        }
+
+        /* TABS */
+        .tabs{
+            display:grid;grid-template-columns:1fr 1fr;
+            background:var(--bg2);border-radius:15px;
+            padding:4px;margin-bottom:22px;gap:4px;
+        }
+        .tab-btn{
+            padding:11px;border:none;border-radius:12px;
+            font-size:14px;font-weight:800;cursor:pointer;
+            transition:all .25s;background:transparent;
+            color:var(--t3);font-family:inherit;
+        }
+        .tab-btn.active{
+            background:linear-gradient(135deg,var(--pl),var(--p));
+            color:#fff;
+            box-shadow:0 3px 12px rgba(5,150,105,.28);
+        }
+
+        /* INPUT */
+        .form-group{margin-bottom:14px}
+        label{display:block;font-size:13px;font-weight:700;color:var(--t2);margin-bottom:6px}
+        .input-wrap{position:relative}
+        .input-icon{position:absolute;right:13px;top:50%;transform:translateY(-50%);font-size:17px;pointer-events:none;opacity:.5}
+        input[type=text],input[type=password]{
+            width:100%;padding:13px 40px 13px 14px;
+            background:var(--bg);border:1.5px solid var(--b);
+            border-radius:13px;font-size:16px;color:var(--t);
+            font-family:inherit;transition:all .2s;
+            direction:rtl;-webkit-appearance:none;
+        }
+        input:focus{
+            outline:none;border-color:var(--pl);
+            background:#fff;
+            box-shadow:0 0 0 3px rgba(5,150,105,.14);
+        }
+        input::placeholder{color:var(--t3);font-size:13px}
+
+        /* BUTTON */
+        .btn-main{
+            width:100%;padding:14px;border:none;border-radius:15px;
+            font-size:16px;font-weight:800;cursor:pointer;
+            background:linear-gradient(135deg,var(--pl),var(--p));
+            color:#fff;
+            box-shadow:0 4px 16px rgba(5,150,105,.3);
+            transition:all .2s;margin-top:6px;font-family:inherit;
+        }
+        .btn-main:active{transform:scale(.97);box-shadow:0 2px 8px rgba(5,150,105,.2)}
+
+        /* MSG */
+        .msg{border-radius:12px;padding:10px 14px;font-size:13px;font-weight:700;margin-bottom:13px;display:none}
+        .msg.error{background:#FEF2F2;border:1.5px solid #FECACA;color:var(--danger)}
+        .msg.success{background:#F0FDF4;border:1.5px solid #A7F3D0;color:var(--p)}
+        .msg.show{display:block;animation:fadeIn .3s ease}
+
+        /* SUCCESS REGISTER */
+        .success-register{text-align:center;padding:16px 0 6px;display:none}
+        .success-register.show{display:block;animation:pop .4s cubic-bezier(.175,.885,.32,1.275) both}
+        .success-icon{font-size:52px;margin-bottom:12px;display:block}
+        .success-title{font-size:21px;font-weight:900;color:var(--t);margin-bottom:7px}
+        .success-sub{font-size:13px;color:var(--t3);margin-bottom:18px;line-height:1.7;font-weight:500}
+
+        .hint{font-size:12px;color:var(--t3);text-align:center;margin-top:14px;font-weight:500}
+        .hint strong{color:var(--p);cursor:pointer;font-weight:800}
+
+        @keyframes slideDown{from{opacity:0;transform:translateY(-24px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes slideUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+        @keyframes pop{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+        @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+        .shake{animation:shake .35s ease}
+
+        /* ═══════════ دۆخی تاریک ═══════════ */
+        html[data-theme="dark"]{
+            --bg:#0E1512;--bg2:#161D19;--card:#171F1B;--b:#2A322D;
+            --t:#F3F5F3;--t2:#C9CFCB;--t3:#9AA39D;
+            --danger:#F87171;
+            --sh:0 2px 8px rgba(0,0,0,.45),0 8px 32px rgba(0,0,0,.4);
+            color-scheme:dark;
+        }
+        html[data-theme="dark"] body{background:linear-gradient(160deg,#0E1512 0%,#0B120F 45%,#0E100C 100%)}
+        html[data-theme="dark"] input:focus{background:var(--bg2)}
+        html[data-theme="dark"] .msg.error{background:rgba(248,113,113,.14);border-color:rgba(248,113,113,.4)}
+        html[data-theme="dark"] .msg.success{background:rgba(16,185,129,.14);border-color:rgba(16,185,129,.4)}
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <div class="logo">
+        <div class="logo-icon">🏢</div>
+        <div class="logo-title">HR <span class="g">System</span></div>
+    </div>
+
+    <div class="card">
+        <div class="tabs">
+            <button class="tab-btn active" id="tabLogin"    onclick="switchTab('login')">داخڵبوون</button>
+            <button class="tab-btn"        id="tabRegister" onclick="switchTab('register')">تۆمارکردن</button>
+        </div>
+
+        <div class="msg" id="msgBox"></div>
+
+        <!-- LOGIN -->
+        <div id="loginSection">
+            <div class="form-group">
+                <label>ناوی بەکارهێنەر</label>
+                <div class="input-wrap">
+                    <span class="input-icon">👤</span>
+                    <input type="text" id="loginUser" placeholder="ناوی بەکارهێنەرەکەت..."
+                        autocomplete="username" autocorrect="off" autocapitalize="off" oninput="clearMsg()">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>پاسووەرد</label>
+                <div class="input-wrap">
+                    <span class="input-icon">🔒</span>
+                    <input type="password" id="loginPass" placeholder="پاسووەردەکەت..."
+                        autocomplete="current-password" oninput="clearMsg()"
+                        onkeydown="if(event.key==='Enter') doLogin()">
+                </div>
+            </div>
+            <button class="btn-main" onclick="doLogin()">🔓 داخڵبوون</button>
+            <p class="hint">ئەکاونتت نییە؟ <strong onclick="switchTab('register')">تۆمار بکە</strong></p>
+        </div>
+
+        <!-- REGISTER -->
+        <div id="registerSection" style="display:none">
+            <div class="success-register" id="successRegister">
+                <span class="success-icon">🎊</span>
+                <div class="success-title" id="successName"></div>
+                <div class="success-sub">ئەکاونتەکەت بە سەرکەوتوویی دروست کرا!<br>ئێستا بە ناوی بەکارهێنەرەکەت داخڵ ببە.</div>
+                <button class="btn-main" onclick="switchTab('login')" style="margin-top:0">← بڕۆ بۆ داخڵبوون</button>
+            </div>
+            <div id="regForm">
+                <div class="form-group">
+                    <label>ناوی تەواو</label>
+                    <div class="input-wrap">
+                        <span class="input-icon">✏️</span>
+                        <input type="text" id="regName" placeholder="ناوی تەواوت بنووسە..."
+                            autocomplete="name" autocorrect="off" oninput="clearMsg()">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>ناوی بەکارهێنەر</label>
+                    <div class="input-wrap">
+                        <span class="input-icon">👤</span>
+                        <input type="text" id="regUser" placeholder="ناوی بەکارهێنەر (بە ئینگلیزی)..."
+                            autocomplete="username" autocorrect="off" autocapitalize="off" oninput="clearMsg()">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>پاسووەرد</label>
+                    <div class="input-wrap">
+                        <span class="input-icon">🔑</span>
+                        <input type="password" id="regPass" placeholder="لانیکەم ٤ پیت..."
+                            autocomplete="new-password" oninput="clearMsg()"
+                            onkeydown="if(event.key==='Enter') doRegister()">
+                    </div>
+                </div>
+                <button class="btn-main" onclick="doRegister()">✅ دروستکردنی ئەکاونت</button>
+                <p class="hint">ئەکاونتت هەیە؟ <strong onclick="switchTab('login')">داخڵ ببە</strong></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});}
+
+    function getUsers(){try{return JSON.parse(localStorage.getItem('mofradUsers')||'[]')}catch(e){return[]}}
+    function saveUsers(u){try{localStorage.setItem('mofradUsers',JSON.stringify(u))}catch(e){}}
+    function saveSession(u){try{localStorage.setItem('mofradSession',JSON.stringify({username:u.username,name:u.name,id:u.id}))}catch(e){}}
+    function getSession(){try{return JSON.parse(localStorage.getItem('mofradSession')||'null')}catch(e){return null}}
+
+    (function(){const s=getSession();if(s&&s.username)window.location.replace('home.html')})();
+
+    function switchTab(tab){
+        clearMsg();
+        document.getElementById('loginSection').style.display    = tab==='login'?'block':'none';
+        document.getElementById('registerSection').style.display = tab==='login'?'none':'block';
+        document.getElementById('tabLogin').classList[tab==='login'?'add':'remove']('active');
+        document.getElementById('tabRegister').classList[tab==='login'?'remove':'add']('active');
+        if(tab==='register'){
+            document.getElementById('successRegister').classList.remove('show');
+            document.getElementById('regForm').style.display='block';
+        }
+    }
+    function showMsg(t,type){
+        const el=document.getElementById('msgBox');
+        el.textContent=t;el.className='msg '+type+' show';
+        if(type==='error'){el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake')}
+    }
+    function clearMsg(){document.getElementById('msgBox').className='msg'}
+
+    function doRegister(){
+        clearMsg();
+        const name=document.getElementById('regName').value.trim();
+        const username=document.getElementById('regUser').value.trim().toLowerCase().replace(/\s/g,'');
+        const password=document.getElementById('regPass').value;
+        if(!name){showMsg('تکایە ناوی تەواوت بنووسە','error');return}
+        if(!username){showMsg('تکایە ناوی بەکارهێنەر بنووسە','error');return}
+        if(username.length<3){showMsg('ناوی بەکارهێنەر دەبێت لانیکەم ٣ پیت بێت','error');return}
+        if(!/^[a-z0-9_]+$/.test(username)){showMsg('ناوی بەکارهێنەر تەنها ئینگلیزی و ژمارە','error');return}
+        if(!password){showMsg('تکایە پاسووەرد بنووسە','error');return}
+        if(password.length<4){showMsg('پاسووەرد دەبێت لانیکەم ٤ پیت بێت','error');return}
+        const users=getUsers();
+        if(users.some(u=>u.username===username)){showMsg('ئەم ناوی بەکارهێنەرە پێشتر تۆماربووە','error');return}
+        const nu={id:Date.now(),name,username,password,createdAt:new Date().toISOString()};
+        users.push(nu);saveUsers(users);
+        document.getElementById('regForm').style.display='none';
+        document.getElementById('successName').textContent='🎊 بەخێربێیت، '+name+'!';
+        document.getElementById('successRegister').classList.add('show');
+        document.getElementById('regName').value='';
+        document.getElementById('regUser').value='';
+        document.getElementById('regPass').value='';
+    }
+
+    function doLogin(){
+        clearMsg();
+        const username=document.getElementById('loginUser').value.trim().toLowerCase();
+        const password=document.getElementById('loginPass').value;
+        if(!username){showMsg('تکایە ناوی بەکارهێنەر بنووسە','error');return}
+        if(!password){showMsg('تکایە پاسووەرد بنووسە','error');return}
+        const user=getUsers().find(u=>u.username===username&&u.password===password);
+        if(!user){showMsg('ناوی بەکارهێنەر یان پاسووەرد هەڵەیە','error');return}
+        saveSession(user);
+        showMsg('✅ بەخێربێیت، '+user.name+'!','success');
+        setTimeout(()=>window.location.replace('home.html'),700);
+    }
+</script>
+</body>
+</html>
